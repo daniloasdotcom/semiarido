@@ -5,18 +5,15 @@ from streamlit_folium import folium_static
 from folium.plugins import Fullscreen
 import os
 
-# Configuração da página
 st.set_page_config(layout="wide")
 
-st.sidebar.title("🧱 Visualizador de Solos")
-st.sidebar.markdown("Visualize todas as camadas de solos do semiárido com controle individual.")
+st.sidebar.title("🧱 GeoSAB - Solos")
+st.sidebar.markdown("Visualize todas as camadas de solos do semiárido com controle individual e cores associadas.")
 
 st.markdown("## Solos do Semiárido - Todas as Camadas")
 
-# Caminho dos arquivos .shp
 CAMINHO_SHAPES = "dados"
 
-# Dicionário de cores por tipo de solo
 CORES_SOLOS = {
     "AR": "saddlebrown", "CX": "darkorange", "ES": "darkgoldenrod", "FF": "darkmagenta",
     "FX": "indigo", "GX": "slategray", "GZ": "lightseagreen", "LA": "seagreen",
@@ -27,19 +24,19 @@ CORES_SOLOS = {
     "SX": "teal", "TC": "cadetblue", "VC": "hotpink", "VE": "salmon"
 }
 
-# Lista de arquivos COD_SIMBOL_*.shp
-arquivos_shape = sorted([
-    f for f in os.listdir(CAMINHO_SHAPES)
-    if f.startswith("COD_SIMBOL_") and f.endswith(".shp")
-])
-
-# Camadas adicionais e seus caminhos
 camadas_disponiveis = {
     "Limites do Semiárido": "limites_semiarido.shp",
     "Estados do Semiárido": "Estados_Semiarido.shp"
 }
 
-# Interface: escolha da ordem das camadas adicionais
+@st.cache_data(show_spinner=False)
+def carregar_shapefile(caminho):
+    gdf = gpd.read_file(caminho)
+    if gdf.crs is None:
+        gdf.set_crs(epsg=4674, inplace=True)
+    return gdf
+
+# Interface lateral
 col1, col2, col3 = st.columns([1, 5, 1])
 with col2:
     ordem_camadas = st.multiselect(
@@ -49,7 +46,9 @@ with col2:
         help="Arraste para definir a ordem de sobreposição"
     )
 
-# Criar mapa base
+    exibir_todos = st.checkbox("✅ Exibir todas as camadas de solo", value=True)
+
+# Criação do mapa
 mapa = folium.Map(location=[-13, -40], zoom_start=6, control_scale=True)
 Fullscreen(position="topright").add_to(mapa)
 
@@ -65,22 +64,34 @@ folium.TileLayer(
     name='Preto e Branco',
     attr='Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
 ).add_to(mapa)
+folium.TileLayer(
+    tiles="",
+    name="Branco",
+    attr="Mapa sem fundo",
+    show=False,
+    overlay=False,
+    control=True
+).add_to(mapa)
 
-# Adicionar camadas de solo
+# Camadas de solo SEMPRE adicionadas, mas show depende do checkbox
+arquivos_shape = sorted([
+    f for f in os.listdir(CAMINHO_SHAPES)
+    if f.startswith("COD_SIMBOL_") and f.endswith(".shp")
+])
+
 for arquivo in arquivos_shape:
     nome_base = arquivo.replace("COD_SIMBOL_", "").replace(".shp", "")
     caminho = os.path.join(CAMINHO_SHAPES, arquivo)
 
     try:
-        gdf = gpd.read_file(caminho)
-        if gdf.crs is None:
-            gdf.set_crs(epsg=4674, inplace=True)
-
+        gdf = carregar_shapefile(caminho)
         cor = CORES_SOLOS.get(nome_base, "gray")
+        label_colorida = f"<span style='background:{cor};padding:2px 6px;margin-right:4px;border-radius:2px;'>&nbsp;</span>Solo {nome_base}"
 
         folium.GeoJson(
             gdf,
-            name=f"Solo {nome_base}",
+            name=label_colorida,
+            show=exibir_todos,
             style_function=lambda x, cor=cor: {
                 "color": cor,
                 "weight": 1,
@@ -91,15 +102,12 @@ for arquivo in arquivos_shape:
     except Exception as e:
         st.warning(f"⚠️ Erro ao carregar {arquivo}: {e}")
 
-# Adicionar camadas adicionais na ordem selecionada
+# Camadas adicionais selecionadas
 for nome_camada in ordem_camadas:
     caminho = os.path.join(CAMINHO_SHAPES, camadas_disponiveis[nome_camada])
     if os.path.exists(caminho):
         try:
-            gdf = gpd.read_file(caminho)
-            if gdf.crs is None:
-                gdf.set_crs(epsg=4674, inplace=True)
-
+            gdf = carregar_shapefile(caminho)
             cor = "green" if "Limites" in nome_camada else "red"
 
             folium.GeoJson(
@@ -114,10 +122,9 @@ for nome_camada in ordem_camadas:
         except Exception as e:
             st.warning(f"⚠️ Erro ao carregar {nome_camada}: {e}")
 
-# Controle de camadas
 folium.LayerControl(collapsed=False).add_to(mapa)
 
-# Exibir mapa com altura suficiente
+# Exibe o mapa
 col1, col2, col3 = st.columns([1, 5, 1])
 with col2:
     folium_static(mapa, height=1000)
