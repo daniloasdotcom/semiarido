@@ -1,113 +1,151 @@
 import streamlit as st
 import geopandas as gpd
 import folium
-from folium.plugins import Fullscreen
 from streamlit_folium import folium_static
+from folium.plugins import Fullscreen
 import os
-import time
 
-# Configuração da página
 st.set_page_config(layout="wide")
 
-# Sidebar
-st.sidebar.title("🛰️ Visualizador Geográfico")
-st.sidebar.markdown("Explore os municípios da Caatinga, os limites do Semiárido e os estados abrangidos.")
+st.sidebar.title("🧱 GeoSAB - Solos")
+st.sidebar.markdown("Visualize todas as camadas de solos do semiárido com controle individual e cores associadas.")
 
-# Título centralizado
 col1, col2, col3 = st.columns([1, 5, 1])
 with col2:
-    st.markdown("## Visualizador Interativo - Caatinga e Semiárido")
+    st.markdown("<h2 style='text-align: center;'>Solos do Semiárido - Todas as Camadas</h2>", unsafe_allow_html=True)
 
-# Caminhos dos shapefiles
-path_caatinga = os.path.join("dados", "Municipios_caatinga.shp")
-path_semiarido = os.path.join("dados", "limites_semiarido.shp")
-path_estados = os.path.join("dados", "Estados_Semiarido.shp")
+CAMINHO_SHAPES = "dados"
 
-# Spinner com mensagem centralizada
+CORES_SOLOS = {
+    "AR": "saddlebrown", "CX": "darkorange", "ES": "darkgoldenrod", "FF": "darkmagenta",
+    "FX": "indigo", "GX": "slategray", "GZ": "lightseagreen", "LA": "seagreen",
+    "LV": "darkgreen", "LVA": "limegreen", "MD": "orchid", "MT": "plum",
+    "Magua0": "goldenrod", "Magua1": "khaki", "PA": "coral", "PAC": "tomato",
+    "PV": "chocolate", "PVA": "burlywood", "RL": "peru", "RQ": "olive",
+    "RR": "mediumseagreen", "RU": "crimson", "SG": "steelblue", "SN": "midnightblue",
+    "SX": "teal", "TC": "cadetblue", "VC": "hotpink", "VE": "salmon"
+}
+
+camadas_disponiveis = {
+    "Limites do Semiárido": "limites_semiarido.shp",
+    "Estados do Semiárido": "Estados_Semiarido.shp",
+    "Caatinga": "caatinga/caatinga.shp",
+    "Matopiba": "sab_matopiba/sab_matopiba.shp"
+}
+
+@st.cache_data(show_spinner=False)
+def carregar_shapefile(caminho):
+    gdf = gpd.read_file(caminho)
+    if gdf.crs is None:
+        gdf.set_crs(epsg=4674, inplace=True)
+    return gdf
+
+# Interface lateral
 col1, col2, col3 = st.columns([1, 5, 1])
 with col2:
-    with st.spinner("🗺️ **Carregando o mapa, por favor aguarde...**"):
-        time.sleep(0.5)
+    st.markdown(
+        "<label style='font-size:18px; font-weight:bold; margin-bottom:0;'>🧩 Escolha e ordene as camadas adicionais:</label>",
+        unsafe_allow_html=True
+    )
 
-        # Mapa com localização e zoom fixos
-        mapa = folium.Map(location=[-13, -40], zoom_start=5, control_scale=True)
+    ordem_camadas = st.multiselect(
+        "",  # Label vazio, já usamos o markdown acima
+        options=list(camadas_disponiveis.keys()),
+        default=[],
+        help="Arraste para definir a ordem de sobreposição",
+        placeholder="Escolha as camadas de visualização"
+    )
 
-        # Tela cheia
-        Fullscreen(position="topright").add_to(mapa)
+    exibir_todos = st.checkbox("Exibir todas as camadas de solo", value=True, key="exibir_solos_checkbox")
 
-        # Camadas base
-        folium.TileLayer('OpenStreetMap', name='OpenStreetMap').add_to(mapa)
+# Criação do mapa sem camada base padrão
+mapa = folium.Map(location=[-13, -40], zoom_start=6, control_scale=True, tiles=None)
+Fullscreen(position="topright").add_to(mapa)
 
-        folium.TileLayer(
-            tiles='https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png',
-            name='Terreno',
-            attr='Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
-        ).add_to(mapa)
+# Camadas base
+folium.TileLayer(
+    tiles='https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
+    name='Preto e Branco',
+    attr='Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
+).add_to(mapa)
+folium.TileLayer(
+    tiles='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    name='Claro',
+    attr='© CartoDB'
+).add_to(mapa)
 
-        folium.TileLayer(
-            tiles='https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
-            name='Preto e Branco',
-            attr='Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
-        ).add_to(mapa)
+# Camadas de solo SEMPRE adicionadas, mas show depende do checkbox
+arquivos_shape = sorted([
+    f for f in os.listdir(CAMINHO_SHAPES)
+    if f.startswith("COD_SIMBOL_") and f.endswith(".shp")
+])
 
-        folium.TileLayer(
-            tiles='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-            name='Claro',
-            attr='© CartoDB'
-        ).add_to(mapa)
+for arquivo in arquivos_shape:
+    nome_base = arquivo.replace("COD_SIMBOL_", "").replace(".shp", "")
+    caminho = os.path.join(CAMINHO_SHAPES, arquivo)
 
-        # Estilo das camadas vetoriais
-        def estilo(cor):
-            return lambda x: {
+    try:
+        gdf = carregar_shapefile(caminho)
+        cor = CORES_SOLOS.get(nome_base, "gray")
+        label_colorida = f"<span style='background:{cor};padding:2px 6px;margin-right:4px;border-radius:2px;'>&nbsp;</span>Solo {nome_base}"
+
+        folium.GeoJson(
+            gdf,
+            name=label_colorida,
+            show=exibir_todos,
+            style_function=lambda x, cor=cor: {
                 "color": cor,
                 "weight": 1,
-                "fillOpacity": 0.2,
+                "fillOpacity": 0.4
             }
+        ).add_to(mapa)
 
-        # Camada 1: Municípios da Caatinga
-        if os.path.exists(path_caatinga):
-            gdf1 = gpd.read_file(path_caatinga)
-            folium.GeoJson(
-                gdf1,
-                name="Municípios Caatinga",
-                style_function=estilo("blue")
-            ).add_to(mapa)
+    except Exception as e:
+        st.warning(f"⚠️ Erro ao carregar {arquivo}: {e}")
 
-        # Camada 2: Limites do Semiárido
-        if os.path.exists(path_semiarido):
-            gdf2 = gpd.read_file(path_semiarido)
-            folium.GeoJson(
-                gdf2,
-                name="Limites do Semiárido",
-                style_function=estilo("green")
-            ).add_to(mapa)
-
-        # Camada 3: Estados no Semiárido
-        if os.path.exists(path_estados):
-            gdf3 = gpd.read_file(path_estados)
-            if not gdf3.empty:
-                folium.GeoJson(
-                    gdf3,
-                    name="Estados no Semiárido",
-                    style_function=estilo("red")
-                ).add_to(mapa)
+# Camadas adicionais selecionadas
+for nome_camada in ordem_camadas:
+    caminho = os.path.join(CAMINHO_SHAPES, camadas_disponiveis[nome_camada])
+    if os.path.exists(caminho):
+        try:
+            gdf = carregar_shapefile(caminho)
+            if "Limites" in nome_camada:
+                estilo = lambda x: {
+                    "color": "black",
+                    "weight":3,
+                    "fillOpacity": 0  # sem preenchimento
+                }
+            elif "Estados" in nome_camada:
+                estilo = lambda x: {
+                    "color": "red",
+                    "weight": 3,
+                    "fillOpacity": 0
+                }
+            elif "Matopiba" in nome_camada:
+                estilo = lambda x: {
+                    "color": "brown",
+                    "weight": 3,
+                    "fillOpacity": 0
+                }
             else:
-                st.warning("⚠️ Shapefile 'Estados_Semiarido' está vazio.")
-        else:
-            st.error("❌ Shapefile 'Estados_Semiarido' não encontrado.")
+                estilo = lambda x: {
+                    "color": "blue",
+                    "weight": 3,
+                    "fillOpacity": 0
+                }
 
-        # Controle de camadas
-        folium.LayerControl(collapsed=False).add_to(mapa)
+            folium.GeoJson(
+                gdf,
+                name=nome_camada,
+                style_function=estilo
+            ).add_to(mapa)
+        except Exception as e:
+            st.warning(f"⚠️ Erro ao carregar {nome_camada}: {e}")
 
-        # Renderiza o mapa centralizado
-        with col2:
-            folium_static(mapa, height=600)
+folium.LayerControl(collapsed=False).add_to(mapa)
 
-# Mensagem de sucesso temporária
-mensagem = st.empty()
-with mensagem.container():
-    col1, col2, col3 = st.columns([1, 5, 1])
-    with col2:
-        st.success("✅ Mapa carregado com sucesso.")
-time.sleep(3)
-mensagem.empty()
+# Exibe o mapa centralizado
+
+col1, col2, col3 = st.columns([1, 5, 1])
+with col2:
+    folium_static(mapa, height=1000, width=2000)
