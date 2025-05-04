@@ -8,7 +8,7 @@ import os
 st.set_page_config(layout="wide")
 
 st.sidebar.title("🧱 GeoSAB - Solos")
-st.sidebar.markdown("Visualize todas as camadas de solos do semiárido com controle individual e cores associadas.")
+st.sidebar.markdown("Visualize todas as camadas de solos do semiárido brasileiro com controle individual e cores associadas.")
 
 col1, col2, col3 = st.columns([1, 5, 1])
 with col2:
