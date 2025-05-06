@@ -170,8 +170,8 @@ if opcao_solo == "Todas as camadas":
                 gdf_camada,
                 name=camada,
                 style_function=lambda x: {
-                    "color": "gray",
-                    "weight": 1.5,
+                    "color": "black",
+                    "weight": 3,
                     "fillOpacity": 0
                 }
             ).add_to(mapa)
