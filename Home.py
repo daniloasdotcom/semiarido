@@ -17,7 +17,7 @@ st.divider()
 
 st.subheader("🔍 Comece por aqui")
 st.markdown("""
-- [📍 **Solos do Semiárido**](./Solos) — Explore o mapa interativo com diferentes camadas e simbologias.
+- [📍 **Solos do Semiárido**](.pages/Solos) — Explore o mapa interativo com diferentes camadas e simbologias.
 - [🌿 **Xerófitas**](./🌵_Xerofilas) — Consulte espécies adaptadas à seca, com informações de uso, origem e adaptabilidade.
 """)
 
