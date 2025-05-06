@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.set_page_config(page_title="GeoSAB", page_icon="🌵", layout="wide")
+st.set_page_config(page_title="GeoSAB", page_icon="🌵", layout="centered")
 
 st.title("🌵 GeoSAB – Semiárido Brasileiro Sustentável")
 
