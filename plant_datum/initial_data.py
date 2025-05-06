@@ -1,4 +1,4 @@
-from plant_database import adicionar_planta, listar_plantas
+from plant_datum.plant_database import adicionar_planta, listar_plantas
 
 def dados_iniciais():
     if len(listar_plantas()) == 0:
