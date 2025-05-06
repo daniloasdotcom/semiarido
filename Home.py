@@ -1,10 +1,6 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="Início - Semiárido Sustentável",
-    page_icon="🌵",
-    layout="wide"
-)
+st.set_page_config(page_title="GeoSAB", page_icon="🌵", layout="wide")
 
 st.title("🌵 GeoSAB – Semiárido Brasileiro Sustentável")
 
@@ -21,8 +17,8 @@ st.divider()
 
 st.subheader("🔍 Comece por aqui")
 st.markdown("""
-- [📍 **Solos do Semiárido**](./_Solos) — Explore o mapa interativo com diferentes camadas e simbologias.
-- [🌿 **Xerófitas**](./_Xerofilas) — Consulte espécies adaptadas à seca, com informações de uso, origem e adaptabilidade.
+- [📍 **Solos do Semiárido**](./Solos) — Explore o mapa interativo com diferentes camadas e simbologias.
+- [🌿 **Xerófitas**](./🌵_Xerofilas) — Consulte espécies adaptadas à seca, com informações de uso, origem e adaptabilidade.
 """)
 
 st.divider()
