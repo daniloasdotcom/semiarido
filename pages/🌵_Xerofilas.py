@@ -16,11 +16,14 @@ if plantas:
     if criterio == "Nome popular":
         opcoes = {p[2]: p for p in plantas}  # nome popular → planta
         termos_ordenados = sorted(opcoes.keys())
+        termos_ordenados.insert(0, "")  # Adiciona um item vazio no topo
+
     else:
         opcoes = {p[1]: p for p in plantas}  # nome científico → planta
         termos_ordenados = sorted(opcoes.keys())
+        termos_ordenados.insert(0, "")  # Adiciona um item vazio no topo
 
-    termo = st.selectbox("Digite ou selecione uma planta:", options=termos_ordenados, placeholder="Digite aqui...")
+    termo = st.selectbox("Digite ou selecione uma planta:", options=termos_ordenados, index=0, placeholder="Digite aqui...")
 
     if termo:
         planta = opcoes[termo]
