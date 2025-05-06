@@ -15,14 +15,6 @@ Aqui você encontrará dados sobre:
 
 st.divider()
 
-st.subheader("🔍 Comece por aqui")
-st.markdown("""
-- [📍 **Solos do Semiárido**](.pages/Solos) — Explore o mapa interativo com diferentes camadas e simbologias.
-- [🌿 **Xerófitas**](./🌵_Xerofilas) — Consulte espécies adaptadas à seca, com informações de uso, origem e adaptabilidade.
-""")
-
-st.divider()
-
 st.subheader("📢 Sobre o Projeto")
 st.markdown("""
 Este sistema foi idealizado para apoiar **pesquisadores, agricultores, estudantes e gestores públicos** interessados em promover o uso racional dos recursos naturais no semiárido, com base em informações acessíveis e organizadas.
