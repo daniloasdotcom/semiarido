@@ -34,9 +34,16 @@ if plantas:
     if termo:
         planta = opcoes[termo]
 
-        # Exibir informações da planta
+        # Detectar tema atual
+        theme = st.get_option("theme.base")
+        bg_color = "#1e1e1e" if theme == "dark" else "#f9f9f9"
+        text_color = "#ffffff" if theme == "dark" else "#000000"
+        border_color = "#444" if theme == "dark" else "#ccc"
+
+        # Exibir informações da planta com estilo adaptável
         st.markdown(f"""
-            <div style="background-color: #f9f9f9; padding: 1rem; border-radius: 10px; border: 1px solid #ccc;">
+            <div style="background-color: {bg_color}; color: {text_color};
+                        padding: 1rem; border-radius: 10px; border: 1px solid {border_color};">
                 <p><strong>🌿 Nome popular:</strong> {planta[2]}</p>
                 <p><strong>🔬 Nome científico:</strong> <em>{planta[1]}</em></p>
                 <p><strong>🌍 Origem:</strong> {planta[3]}</p>
@@ -46,12 +53,13 @@ if plantas:
             </div>
         """, unsafe_allow_html=True)
 
-        # Exibir receitas vinculadas em expanders
+        # Exibir receitas vinculadas
         receitas = listar_receitas(planta[0])
         if receitas:
             st.markdown("### 🍴 Receitas")
             for _, titulo, descricao in receitas:
                 with st.expander(f"📖 {titulo}"):
+                    # Aqui, se desejar, você pode também aplicar o mesmo estilo adaptável
                     st.markdown(descricao, unsafe_allow_html=True)
         else:
             st.info("Nenhuma receita cadastrada para esta planta.")
