@@ -100,3 +100,18 @@ def atualizar_receita(receita_id, novo_titulo, nova_descricao):
     ''', (novo_titulo, nova_descricao, receita_id))
     conn.commit()
     conn.close()
+
+def deletar_planta(planta_id):
+    conn = conectar()
+    c = conn.cursor()
+    c.execute('DELETE FROM receitas WHERE planta_id = ?', (planta_id,))
+    c.execute('DELETE FROM plantas WHERE id = ?', (planta_id,))
+    conn.commit()
+    conn.close()
+
+def deletar_receita(receita_id):
+    conn = conectar()
+    c = conn.cursor()
+    c.execute('DELETE FROM receitas WHERE id = ?', (receita_id,))
+    conn.commit()
+    conn.close()
