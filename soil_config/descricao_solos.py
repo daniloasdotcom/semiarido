@@ -19,7 +19,7 @@ descricao_solos = {
     </p>
     
     <p>
-    Quimicamente, variam de <strong>moderadamente ácidos a neutros</strong>, com pH entre 6,0 e 7,0 e <strong>alta saturação por bases</strong> (V &gt; 75%), sem presença de alumínio trocável. Em <strong>Luvissolos vérticos</strong>, a saturação por bases pode atingir 100% em todos os horizontes. A <strong>soma de bases (SB)</strong> e a <strong>capacidade de troca de cátions (CTC)</strong> são altas e geralmente crescentes com a profundidade, alcançando até 27 cmol<sup>c</sup>/kg e 36 cmol<sup>c</sup>/kg, respectivamente. Já o <strong>fósforo assimilável</strong> tende a ser baixo, com exceção de solos com caráter vértico ou planossólico, onde pode atingir até 45 mg/kg no horizonte superficial.
+    Quimicamente, variam de <strong>moderadamente ácidos a neutros</strong>, com pH entre 6,0 e 7,0 e <strong>alta saturação por bases</strong> (V &gt; 75%), sem presença de alumínio trocável. Em <strong>Luvissolos vérticos</strong>, a saturação por bases pode atingir 100% em todos os horizontes. A <strong>soma de bases (SB)</strong> e a <strong>capacidade de troca de cátions (CTC)</strong> são altas e geralmente crescentes com a profundidade, alcançando até 27 cmol<sub>c</sub>/kg e 36 cmol<sub>c</sub>/kg, respectivamente. Já o <strong>fósforo assimilável</strong> tende a ser baixo, com exceção de solos com caráter vértico ou planossólico, onde pode atingir até 45 mg/kg no horizonte superficial.
     </p>
     
     <p>
