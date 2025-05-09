@@ -14,7 +14,9 @@ def criar_tabela():
             origem TEXT,
             uso TEXT,
             caracteristicas_adaptativas TEXT,
-            observacoes TEXT
+            observacoes TEXT,
+            plantio_manejo TEXT,
+            aplicacoes_agroflorestais TEXT
         )
     ''')
     conn.commit()
@@ -35,13 +37,16 @@ def criar_tabela_receitas():
     conn.commit()
     conn.close()
 
-def adicionar_planta(nome_cientifico, nome_popular, origem, uso, caracteristicas, observacoes):
+def adicionar_planta(nome_cientifico, nome_popular, origem, uso, caracteristicas, observacoes, plantio_manejo, aplicacoes_agroflorestais):
     conn = conectar()
     c = conn.cursor()
     c.execute('''
-        INSERT INTO plantas (nome_cientifico, nome_popular, origem, uso, caracteristicas_adaptativas, observacoes)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ''', (nome_cientifico, nome_popular, origem, uso, caracteristicas, observacoes))
+        INSERT INTO plantas (
+            nome_cientifico, nome_popular, origem, uso,
+            caracteristicas_adaptativas, observacoes,
+            plantio_manejo, aplicacoes_agroflorestais
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (nome_cientifico, nome_popular, origem, uso, caracteristicas, observacoes, plantio_manejo, aplicacoes_agroflorestais))
     conn.commit()
     conn.close()
 
@@ -61,14 +66,16 @@ def buscar_por_nome(nome):
     conn.close()
     return dados
 
-def atualizar_planta(id, nome_cientifico, nome_popular, origem, uso, caracteristicas, observacoes):
+def atualizar_planta(id, nome_cientifico, nome_popular, origem, uso, caracteristicas, observacoes, plantio_manejo, aplicacoes_agroflorestais):
     conn = conectar()
     c = conn.cursor()
     c.execute('''
         UPDATE plantas
-        SET nome_cientifico = ?, nome_popular = ?, origem = ?, uso = ?, caracteristicas_adaptativas = ?, observacoes = ?
+        SET nome_cientifico = ?, nome_popular = ?, origem = ?, uso = ?,
+            caracteristicas_adaptativas = ?, observacoes = ?,
+            plantio_manejo = ?, aplicacoes_agroflorestais = ?
         WHERE id = ?
-    ''', (nome_cientifico, nome_popular, origem, uso, caracteristicas, observacoes, id))
+    ''', (nome_cientifico, nome_popular, origem, uso, caracteristicas, observacoes, plantio_manejo, aplicacoes_agroflorestais, id))
     conn.commit()
     conn.close()
 

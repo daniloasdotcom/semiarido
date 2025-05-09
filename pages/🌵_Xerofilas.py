@@ -40,7 +40,7 @@ if plantas:
         text_color = "#ffffff" if theme == "dark" else "#000000"
         border_color = "#444" if theme == "dark" else "#ccc"
 
-        # Exibir informações da planta com estilo adaptável
+        # Exibir informações da planta com os novos campos
         st.markdown(f"""
             <div style="background-color: {bg_color}; color: {text_color};
                         padding: 1rem; border-radius: 10px; border: 1px solid {border_color};">
@@ -50,6 +50,8 @@ if plantas:
                 <p><strong>🍽️ Uso:</strong><br>{planta[4]}</p>
                 <p><strong>💧 Características adaptativas:</strong><br>{planta[5]}</p>
                 <p><strong>📝 Observações:</strong><br>{planta[6]}</p>
+                <p><strong>🌾 Plantio e manejo:</strong><br>{planta[7] or ""}</p>
+                <p><strong>🌳 Aplicações em SAFs:</strong><br>{planta[8] or ""}</p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -59,7 +61,6 @@ if plantas:
             st.markdown("### 🍴 Receitas")
             for _, titulo, descricao in receitas:
                 with st.expander(f"📖 {titulo}"):
-                    # Aqui, se desejar, você pode também aplicar o mesmo estilo adaptável
                     st.markdown(descricao, unsafe_allow_html=True)
         else:
             st.info("Nenhuma receita cadastrada para esta planta.")
