@@ -1,19 +1,9 @@
-import sqlite3
+import geopandas as gpd
+from shapely.geometry import mapping, shape
 
-conn = sqlite3.connect("xerofilas.db")
-c = conn.cursor()
+gdf = gpd.read_file("dados/geomorfologia_caatinga/south_4326.shp")
 
-try:
-    c.execute("ALTER TABLE plantas ADD COLUMN plantio_manejo TEXT;")
-except sqlite3.OperationalError:
-    print("Coluna 'plantio_manejo' já existe.")
+# Remove Z (transforma cada geometria em 2D)
+gdf["geometry"] = gdf["geometry"].apply(lambda geom: shape(mapping(geom)))
 
-try:
-    c.execute("ALTER TABLE plantas ADD COLUMN aplicacoes_agroflorestais TEXT;")
-except sqlite3.OperationalError:
-    print("Coluna 'aplicacoes_agroflorestais' já existe.")
-
-conn.commit()
-conn.close()
-
-print("✅ Atualização concluída.")
+gdf.to_file("dados/geomorfologia_caatinga/south_final.shp")

@@ -39,6 +39,21 @@ CAMADAS_GEOMORFOLOGIA = {
     "Superfícies Sedimentares Baixas": "geomorfologia_caatinga/low_sedimentary_surfaces.shp",
     "Planalto Sedimentar Alto": "geomorfologia_caatinga/sedimentary_plateau_high.shp",
     "Superfície Sertaneja Norte": "geomorfologia_caatinga/sertaneja_surface_north.shp",
-    "Superfície Sertaneja Pré-Costal": "geomorfologia_caatinga/sertaneja_surface_pre_costal.shp",
     "Superfície Sertaneja Sul": "geomorfologia_caatinga/sertaneja_surface_south.shp",
+    "Superfície Sertaneja Pré-Costal": "geomorfologia_caatinga/sertaneja_surface_pre_costal.shp",
+}
+
+CORES_GEOMORFOLOGIA = {
+    "Planalto Aluvial": "#8dd3c7",
+    "Planalto Borborema": "#ffffb3",
+    "Chapada Diamantina e Espinhaço": "#bebada",
+    "Planícies Costeiras": "#fb8072",
+    "Tabuleiros Costeiros": "#80b1d3",
+    "Maciços Cristalinos": "#fdb462",
+    "Dunas e Paleodunas": "#b3de69",
+    "Superfícies Sedimentares Baixas": "#fccde5",
+    "Planalto Sedimentar Alto": "#d9d9d9",
+    "Superfície Sertaneja Norte": "#bc80bd",
+    "Superfície Sertaneja Pré-Costal": "#ccebc5",
+    "Superfície Sertaneja Sul": "#ffed6f",
 }
