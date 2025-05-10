@@ -42,7 +42,7 @@ CAMADAS_GEOMORFOLOGIA = {
     "Superfície Sertaneja Sul": "geomorfologia_caatinga/sertaneja_surface_south.shp",
     "Superfície Sertaneja Pré-Costal": "geomorfologia_caatinga/sertaneja_surface_pre_costal.shp",
 }
-
+## para ajustar
 CORES_GEOMORFOLOGIA = {
     "Planalto Aluvial": "#8dd3c7",
     "Planalto Borborema": "#ffffb3",
