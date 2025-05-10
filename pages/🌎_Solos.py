@@ -1,12 +1,10 @@
-# pages/solos.py (Extração corrigida)
+# pages/solos.py
 
 import streamlit as st
 import folium
-from streamlit_folium import st_folium
+from streamlit_folium import folium_static
 from folium.plugins import Fullscreen
 import os
-import gdown
-import zipfile
 
 # Importações dos módulos customizados
 from soil_config.config import CAMINHO_SHAPES, CAMADAS_DISPONIVEIS
@@ -15,27 +13,6 @@ from soil_config.utils import adicionar_camada_solo, adicionar_camada_generica
 
 # Configuração da página
 st.set_page_config(layout="wide")
-
-# Verifica se os geojsons já estão extraídos
-if not os.path.exists(os.path.join(CAMINHO_SHAPES, "CXa.geojson")):
-    file_id = "1io9L-rBGI8haOtVJW_TCPqUwHY8MMHUz"
-    output = "dados/solos.zip"
-
-    # Garante que a pasta de destino existe
-    os.makedirs("dados", exist_ok=True)
-
-    # Baixa o .zip do Google Drive
-    gdown.download(f"https://drive.google.com/uc?id={file_id}", output, quiet=False)
-
-    # Extrai os arquivos para a pasta correta
-    with zipfile.ZipFile(output, "r") as zip_ref:
-        zip_ref.extractall("dados")
-
-    os.remove(output)
-
-    # Diagnóstico após extração
-    st.write("Conteúdo do zip extraído:")
-    st.write(os.listdir("dados"))
 
 # Menu lateral
 st.sidebar.title("🧱 GeoSAB - Solos")
@@ -71,9 +48,9 @@ with col2:
 # Obtenção dos arquivos geojson
 arquivos_shape = sorted([
     f for f in os.listdir(CAMINHO_SHAPES)
-    if f.endswith(".geojson")
+    if f.endswith(".shp")
 ])
-todos_os_simbolos = [arquivo.replace(".geojson", "") for arquivo in arquivos_shape]
+todos_os_simbolos = [arquivo.replace(".shp", "") for arquivo in arquivos_shape]
 
 # Criação do mapa
 mapa = folium.Map(location=[-13, -40], zoom_start=6, control_scale=True, tiles=None)
@@ -115,7 +92,7 @@ prefixo, chave_desc = grupo_para_prefixo.get(opcao_solo, ("", None))
 # Adiciona os solos que começam com o prefixo
 for simb in todos_os_simbolos:
     if simb.startswith(prefixo):
-        caminho = os.path.join(CAMINHO_SHAPES, f"{simb}.geojson")
+        caminho = os.path.join(CAMINHO_SHAPES, f"{simb}.shp")
         adicionar_camada_solo(mapa, simb, f"Solo {simb}", caminho)
 
 # Adiciona demais camadas (ocultas por padrão)
@@ -133,7 +110,7 @@ folium.LayerControl(collapsed=False).add_to(mapa)
 
 # Exibição do mapa
 with col2:
-    st_folium(mapa, height=1000, width=2000)
+    folium_static(mapa, height=1000, width=2000)
 
     if chave_desc and chave_desc in descricao_solos:
         st.markdown(descricao_solos[chave_desc], unsafe_allow_html=True)

@@ -1,7 +1,7 @@
 # soil_config/config.py
 # soil_config/config.py
 
-CAMINHO_SHAPES = "dados/solos_sab"
+CAMINHO_SHAPES = "dados/solos_sab250"
 
 CORES_SOLOS = {
     "AR": "#a0522d", "CXa": "#ff00ff", "CXbd": "#c0d904", "CXbe": "#6f7fc7", "CXk": "#c0d904",
