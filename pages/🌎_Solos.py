@@ -1,8 +1,8 @@
-# pages/solos.py (Atualizado com download do .zip do Google Drive)
+# pages/solos.py (Atualizado com diagnóstico de extração e st_folium)
 
 import streamlit as st
 import folium
-from streamlit_folium import folium_static
+from streamlit_folium import st_folium
 from folium.plugins import Fullscreen
 import os
 import gdown
@@ -21,6 +21,9 @@ if not os.path.exists(os.path.join(CAMINHO_SHAPES, "CXa.geojson")):
     file_id = "1io9L-rBGI8haOtVJW_TCPqUwHY8MMHUz"
     output = "dados/solos.zip"
 
+    # Garante que a pasta de destino existe
+    os.makedirs(CAMINHO_SHAPES, exist_ok=True)
+
     # Baixa o .zip do Google Drive
     gdown.download(f"https://drive.google.com/uc?id={file_id}", output, quiet=False)
 
@@ -29,6 +32,10 @@ if not os.path.exists(os.path.join(CAMINHO_SHAPES, "CXa.geojson")):
         zip_ref.extractall(CAMINHO_SHAPES)
 
     os.remove(output)
+
+    # Diagnóstico após extração
+    st.write("Conteúdo do zip extraído:")
+    st.write(os.listdir(CAMINHO_SHAPES))
 
 # Menu lateral
 st.sidebar.title("🧱 GeoSAB - Solos")
@@ -126,12 +133,7 @@ folium.LayerControl(collapsed=False).add_to(mapa)
 
 # Exibição do mapa
 with col2:
-    folium_static(mapa, height=1000, width=2000)
+    st_folium(mapa, height=1000, width=2000)
 
     if chave_desc and chave_desc in descricao_solos:
         st.markdown(descricao_solos[chave_desc], unsafe_allow_html=True)
-
-
-st.write("Arquivos extraídos:")
-st.write(os.listdir("dados/solos_sab"))
-
