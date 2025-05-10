@@ -4,9 +4,9 @@ from folium.plugins import Fullscreen
 import streamlit as st
 
 from .utils import adicionar_camada_solo, adicionar_camada_generica
-from .config import CAMINHO_SHAPES, CAMADAS_DISPONIVEIS
+from .config import CAMINHO_SHAPES, CAMADAS_DISPONIVEIS, CAMADAS_GEOMORFOLOGIA
 
-def gerar_mapa_solos(prefixo, todos_os_simbolos):
+def gerar_mapa_solos(prefixo, todos_os_simbolos, camadas_geomorfologicas):
     with st.spinner('🔄 Carregando dados do solo e gerando o mapa...'):
         mapa = folium.Map(location=[-13, -40], zoom_start=6, control_scale=True, tiles=None)
         Fullscreen(position="topright").add_to(mapa)
@@ -43,6 +43,11 @@ def gerar_mapa_solos(prefixo, todos_os_simbolos):
                     os.path.join("dados", arquivo),
                     show=False
                 )
+
+        # ✅ Adicionar apenas as camadas de geomorfologia selecionadas
+        for nome in camadas_geomorfologicas:
+            caminho = os.path.join("dados", CAMADAS_GEOMORFOLOGIA[nome])
+            adicionar_camada_generica(mapa, nome, caminho, show=True)
 
         folium.LayerControl(collapsed=False).add_to(mapa)
 

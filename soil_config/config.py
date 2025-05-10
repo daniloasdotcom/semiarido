@@ -27,3 +27,18 @@ CAMADAS_DISPONIVEIS = {
     "Caatinga": "caatinga/caatinga.shp",
     "Matopiba": "sab_matopiba/sab_matopiba.shp"
 }
+
+CAMADAS_GEOMORFOLOGIA = {
+    "Planalto Aluvial": "geomorfologia_caatinga/aluvial_plains.shp",
+    "Planalto Borborema": "geomorfologia_caatinga/Borborema_highlands.shp",
+    "Chapada Diamantina e Espinhaço": "geomorfologia_caatinga/Chapada_diamantina_and_espinhaço_highlands.shp",
+    "Planícies Costeiras": "geomorfologia_caatinga/coastal_plains.shp",
+    "Tabuleiros Costeiros": "geomorfologia_caatinga/costal_tablelands.shp",
+    "Maciços Cristalinos": "geomorfologia_caatinga/crystalline_massifs.shp",
+    "Dunas e Paleodunas": "geomorfologia_caatinga/dunes_and_paleodunes.shp",
+    "Superfícies Sedimentares Baixas": "geomorfologia_caatinga/low_sedimentary_surfaces.shp",
+    "Planalto Sedimentar Alto": "geomorfologia_caatinga/sedimentary_plateau_high.shp",
+    "Superfície Sertaneja Norte": "geomorfologia_caatinga/sertaneja_surface_north.shp",
+    "Superfície Sertaneja Pré-Costal": "geomorfologia_caatinga/sertaneja_surface_pre_costal.shp",
+    "Superfície Sertaneja Sul": "geomorfologia_caatinga/sertaneja_surface_south.shp",
+}

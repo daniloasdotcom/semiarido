@@ -2,7 +2,7 @@ import streamlit as st
 st.set_page_config(layout="wide")
 
 import os
-from soil_config.config import CAMINHO_SHAPES, CAMADAS_DISPONIVEIS
+from soil_config.config import CAMINHO_SHAPES, CAMADAS_DISPONIVEIS, CAMADAS_GEOMORFOLOGIA
 from soil_config.descricao_solos import descricao_solos
 from soil_config.mapa_solos import gerar_mapa_solos
 from streamlit_folium import folium_static
@@ -48,6 +48,13 @@ opcao_solo = st.sidebar.radio(
     key="selecao_solo"
 )
 
+# Se quiser, selecione também as camadas de geomorfologia
+st.sidebar.markdown("---")
+camadas_geomorfologia = st.sidebar.multiselect(
+    "🗺️ Camadas geomorfológicas (opcional):",
+    options=list(CAMADAS_GEOMORFOLOGIA.keys())
+)
+
 # Layout central
 col1, col2, col3 = st.columns([1, 5, 1])
 
@@ -88,7 +95,7 @@ else:
 
     with col2:
         with st.spinner("🔄 Carregando dados do solo e gerando o mapa..."):
-            mapa = gerar_mapa_solos(prefixo, todos_os_simbolos)
+            mapa = gerar_mapa_solos(prefixo, todos_os_simbolos, camadas_geomorfologia)
             folium_static(mapa, height=1000, width=2000)
 
         if chave_desc and chave_desc in descricao_solos:
