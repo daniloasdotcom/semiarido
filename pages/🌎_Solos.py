@@ -130,3 +130,8 @@ with col2:
 
     if chave_desc and chave_desc in descricao_solos:
         st.markdown(descricao_solos[chave_desc], unsafe_allow_html=True)
+
+
+st.write("Arquivos extraídos:")
+st.write(os.listdir("dados/solos_sab"))
+
