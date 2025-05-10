@@ -1,4 +1,4 @@
-# pages/solos.py (Atualizado com diagnóstico de extração e st_folium)
+# pages/solos.py (Extração corrigida)
 
 import streamlit as st
 import folium
@@ -22,20 +22,20 @@ if not os.path.exists(os.path.join(CAMINHO_SHAPES, "CXa.geojson")):
     output = "dados/solos.zip"
 
     # Garante que a pasta de destino existe
-    os.makedirs(CAMINHO_SHAPES, exist_ok=True)
+    os.makedirs("dados", exist_ok=True)
 
     # Baixa o .zip do Google Drive
     gdown.download(f"https://drive.google.com/uc?id={file_id}", output, quiet=False)
 
     # Extrai os arquivos para a pasta correta
     with zipfile.ZipFile(output, "r") as zip_ref:
-        zip_ref.extractall(CAMINHO_SHAPES)
+        zip_ref.extractall("dados")
 
     os.remove(output)
 
     # Diagnóstico após extração
     st.write("Conteúdo do zip extraído:")
-    st.write(os.listdir(CAMINHO_SHAPES))
+    st.write(os.listdir("dados"))
 
 # Menu lateral
 st.sidebar.title("🧱 GeoSAB - Solos")
