@@ -24,7 +24,7 @@ CORES_SOLOS = {
 CAMADAS_DISPONIVEIS = {
     "Limites do Semiárido": "limites_semiarido.shp",
     "Estados do Semiárido": "Estados_Semiarido.shp",
-    "Caatinga": "caatinga/caatinga.shp",
+    "Caatinga": "caatinga/Caatinga.shp",
     "Matopiba": "sab_matopiba/sab_matopiba.shp"
 }
 
