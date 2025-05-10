@@ -1,18 +1,34 @@
-# pages/solos.py
-
 import streamlit as st
-import folium
-from streamlit_folium import folium_static
-from folium.plugins import Fullscreen
-import os
+st.set_page_config(layout="wide")
 
-# Importações dos módulos customizados
+import os
 from soil_config.config import CAMINHO_SHAPES, CAMADAS_DISPONIVEIS
 from soil_config.descricao_solos import descricao_solos
-from soil_config.utils import adicionar_camada_solo, adicionar_camada_generica
+from soil_config.mapa_solos import gerar_mapa_solos
+from streamlit_folium import folium_static
 
-# Configuração da página
-st.set_page_config(layout="wide")
+# CSS para centralizar o spinner
+st.markdown("""
+    <style>
+    .css-1v0mbdj {
+        display: flex;
+        justify-content: center;
+    }
+
+    .stSpinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        font-weight: bold;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # Menu lateral
 st.sidebar.title("🧱 GeoSAB - Solos")
@@ -21,6 +37,7 @@ st.sidebar.markdown("Visualize os solos do Semiárido por grupo principal.")
 opcao_solo = st.sidebar.radio(
     "🔍 Visualizar grupo de solos:",
     [
+        "Selecionar...",
         "Cambissolos",
         "Luvissolos",
         "Latossolos",
@@ -31,86 +48,48 @@ opcao_solo = st.sidebar.radio(
     key="selecao_solo"
 )
 
-# Título dinâmico
-titulo = {
-    "Cambissolos": "Cambissolos no Semiárido",
-    "Luvissolos": "Luvissolos no Semiárido",
-    "Latossolos": "Latossolos no Semiárido",
-    "Planossolos": "Planossolos no Semiárido",
-    "Neossolos": "Neossolos no Semiárido",
-    "Argissolos": "Argissolos no Semiárido"
-}[opcao_solo]
-
+# Layout central
 col1, col2, col3 = st.columns([1, 5, 1])
-with col2:
-    st.markdown(f"<h2 style='text-align: center;'>{titulo}</h2>", unsafe_allow_html=True)
 
-# Obtenção dos arquivos geojson
-arquivos_shape = sorted([
-    f for f in os.listdir(CAMINHO_SHAPES)
-    if f.endswith(".shp")
-])
-todos_os_simbolos = [arquivo.replace(".shp", "") for arquivo in arquivos_shape]
+# Se o usuário ainda não selecionou um solo
+if opcao_solo == "Selecionar...":
+    with col2:
+        st.markdown("<h2 style='text-align: center;'>Bem-vindo ao GeoSAB - Solos</h2>", unsafe_allow_html=True)
+        st.markdown("""
+        <p style='text-align: center; font-size: 18px;'>
+            Utilize o menu lateral para visualizar os grupos de solos presentes no Semiárido brasileiro.<br>
+            Ao selecionar um grupo, o mapa correspondente será carregado aqui.
+        </p>
+        """, unsafe_allow_html=True)
 
-# Criação do mapa
-mapa = folium.Map(location=[-13, -40], zoom_start=6, control_scale=True, tiles=None)
-Fullscreen(position="topright").add_to(mapa)
+# Quando um solo é selecionado
+else:
+    titulo = f"{opcao_solo} no Semiárido"
 
-# Camadas base
-folium.TileLayer(
-    tiles='https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
-    name='Preto e Branco',
-    attr='Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
-).add_to(mapa)
+    with col2:
+        st.markdown(f"<h2 style='text-align: center;'>{titulo}</h2>", unsafe_allow_html=True)
 
-folium.TileLayer(
-    tiles='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    name='Claro',
-    attr='© CartoDB'
-).add_to(mapa)
+    arquivos_shape = sorted([
+        f for f in os.listdir(CAMINHO_SHAPES)
+        if f.endswith(".shp")
+    ])
+    todos_os_simbolos = [arquivo.replace(".shp", "") for arquivo in arquivos_shape]
 
-# Ativa sempre os limites do semiárido
-adicionar_camada_generica(
-    mapa,
-    "Limites do Semiárido",
-    os.path.join("dados", CAMADAS_DISPONIVEIS["Limites do Semiárido"]),
-    show=True
-)
+    grupo_para_prefixo = {
+        "Cambissolos": ("C", "CX"),
+        "Luvissolos": ("T", "TC"),
+        "Latossolos": ("L", "LATOSSOLOS"),
+        "Planossolos": ("S", None),
+        "Neossolos": ("R", None),
+        "Argissolos": ("P", None)
+    }
 
-# Mapeia o grupo para prefixo e descrição
-grupo_para_prefixo = {
-    "Cambissolos": ("C", "CX"),
-    "Luvissolos": ("T", "TC"),
-    "Latossolos": ("L", "LATOSSOLOS"),
-    "Planossolos": ("S", None),
-    "Neossolos": ("R", None),
-    "Argissolos": ("P", None)
-}
+    prefixo, chave_desc = grupo_para_prefixo.get(opcao_solo, ("", None))
 
-prefixo, chave_desc = grupo_para_prefixo.get(opcao_solo, ("", None))
+    with col2:
+        with st.spinner("🔄 Carregando dados do solo e gerando o mapa..."):
+            mapa = gerar_mapa_solos(prefixo, todos_os_simbolos)
+            folium_static(mapa, height=1000, width=2000)
 
-# Adiciona os solos que começam com o prefixo
-for simb in todos_os_simbolos:
-    if simb.startswith(prefixo):
-        caminho = os.path.join(CAMINHO_SHAPES, f"{simb}.shp")
-        adicionar_camada_solo(mapa, simb, f"Solo {simb}", caminho)
-
-# Adiciona demais camadas (ocultas por padrão)
-for nome, arquivo in CAMADAS_DISPONIVEIS.items():
-    if nome != "Limites do Semiárido":
-        adicionar_camada_generica(
-            mapa,
-            nome,
-            os.path.join("dados", arquivo),
-            show=False
-        )
-
-# Controle de camadas
-folium.LayerControl(collapsed=False).add_to(mapa)
-
-# Exibição do mapa
-with col2:
-    folium_static(mapa, height=1000, width=2000)
-
-    if chave_desc and chave_desc in descricao_solos:
-        st.markdown(descricao_solos[chave_desc], unsafe_allow_html=True)
+        if chave_desc and chave_desc in descricao_solos:
+            st.markdown(descricao_solos[chave_desc], unsafe_allow_html=True)
