@@ -1,10 +1,12 @@
-# pages/solos.py
+# pages/solos.py (Atualizado com download do .zip do Google Drive)
 
 import streamlit as st
 import folium
 from streamlit_folium import folium_static
 from folium.plugins import Fullscreen
 import os
+import gdown
+import zipfile
 
 # Importações dos módulos customizados
 from soil_config.config import CAMINHO_SHAPES, CAMADAS_DISPONIVEIS
@@ -13,6 +15,20 @@ from soil_config.utils import adicionar_camada_solo, adicionar_camada_generica
 
 # Configuração da página
 st.set_page_config(layout="wide")
+
+# Verifica se os geojsons já estão extraídos
+if not os.path.exists(os.path.join(CAMINHO_SHAPES, "CXa.geojson")):
+    file_id = "1io9L-rBGI8haOtVJW_TCPqUwHY8MMHUz"
+    output = "dados/solos.zip"
+
+    # Baixa o .zip do Google Drive
+    gdown.download(f"https://drive.google.com/uc?id={file_id}", output, quiet=False)
+
+    # Extrai os arquivos para a pasta correta
+    with zipfile.ZipFile(output, "r") as zip_ref:
+        zip_ref.extractall(CAMINHO_SHAPES)
+
+    os.remove(output)
 
 # Menu lateral
 st.sidebar.title("🧱 GeoSAB - Solos")
