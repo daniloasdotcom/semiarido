@@ -10,7 +10,7 @@ import zipfile
 import tempfile
 
 st.set_page_config(layout="wide")
-st.title("Mapa de Solos por Município - Semiárido (multi-shapefile com legenda)")
+st.title("Mapa de Solos por Município - Com shapefile para downlaod")
 
 # --- 1. Carregar municípios ---
 gdf_municipios = gpd.read_file("dados/municipios/Municipios_caatinga.shp")
