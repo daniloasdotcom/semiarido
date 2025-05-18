@@ -80,7 +80,11 @@ gdf_solos = gpd.GeoDataFrame(pd.concat(todos_solos, ignore_index=True))
 
 # --- 3. Selecionar município ---
 lista_municipios = sorted(gdf_municipios["NM_MUN"].unique())
-municipio_nome = st.selectbox("Selecione um município", lista_municipios)
+municipio_nome = st.selectbox("Selecione um município", [""] + lista_municipios)
+
+if not municipio_nome:
+    st.warning("Por favor, selecione um município no menu acima.")
+    st.stop()
 
 muni = gdf_municipios[gdf_municipios["NM_MUN"] == municipio_nome]
 
