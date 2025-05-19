@@ -51,14 +51,14 @@ def gerar_mapa_solos(prefixo, todos_os_simbolos, camadas_geomorfologicas):
         })
 
         for simb in simbolos_filtrados:
-            caminho = os.path.join(CAMINHO_SHAPES, f"{simb}.gpkg")
+            caminho = os.path.join(CAMINHO_SHAPES, f"{simb}.shp")
             try:
-                gdf = gpd.read_file(caminho, layer=simb)
+                gdf = gpd.read_file(caminho)
 
                 # ✅ Simplifica a geometria para melhorar o desempenho no mapa
                 gdf["geometry"] = gdf["geometry"].simplify(tolerance=0.005, preserve_topology=True)
 
-                # ⚠️ Garanta que está em WGS84 (necessário para mapas web)
+                # ⚠️ Garante que está em WGS84
                 if gdf.crs and gdf.crs.to_epsg() != 4326:
                     gdf = gdf.to_crs(epsg=4326)
 
@@ -68,8 +68,8 @@ def gerar_mapa_solos(prefixo, todos_os_simbolos, camadas_geomorfologicas):
 
                 gdfs.append(gdf)
 
-                # Atualize aqui se a função também precisa receber .gpkg
-                adicionar_camada_solo(mapa, simb, f"Solo {simb}", caminho, layer=simb)
+                # ✅ Chamando com .shp (sem o parâmetro `layer`)
+                adicionar_camada_solo(mapa, simb, f"Solo {simb}", caminho)
             except Exception as e:
                 st.warning(f"Erro ao carregar {simb}: {e}")
 

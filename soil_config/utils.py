@@ -2,16 +2,8 @@ import geopandas as gpd
 import folium
 from soil_config.config import CORES_SOLOS, CORES_GEOMORFOLOGIA
 
-import geopandas as gpd
-import folium
-from soil_config.config import CORES_SOLOS, CORES_GEOMORFOLOGIA
-
-def adicionar_camada_solo(mapa, nome, legenda, caminho, layer=None):
-    # Suporte para GeoPackage com camada nomeada
-    if layer:
-        gdf = gpd.read_file(caminho, layer=layer)
-    else:
-        gdf = gpd.read_file(caminho)
+def adicionar_camada_solo(mapa, nome, legenda, caminho):
+    gdf = gpd.read_file(caminho)
 
     cor = CORES_SOLOS.get(nome, "#666666")
 

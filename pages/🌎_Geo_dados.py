@@ -69,11 +69,11 @@ else:
     with col2:
         st.markdown(f"<h2 style='text-align: center;'>{titulo}</h2>", unsafe_allow_html=True)
 
-    # Usando arquivos .gpkg ao invés de .shp
+    # Voltando a usar arquivos .shp
     arquivos_shape = sorted([
-        f for f in os.listdir(CAMINHO_SHAPES) if f.endswith(".gpkg")
+        f for f in os.listdir(CAMINHO_SHAPES) if f.endswith(".shp")
     ])
-    todos_os_simbolos = [arquivo.replace(".gpkg", "") for arquivo in arquivos_shape]
+    todos_os_simbolos = [arquivo.replace(".shp", "") for arquivo in arquivos_shape]
 
     grupo_para_prefixo = {
         "Cambissolos": ("C", "CX"),
