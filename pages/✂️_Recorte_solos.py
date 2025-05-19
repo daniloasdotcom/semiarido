@@ -28,31 +28,24 @@ for shp in arquivos:
     caminho = os.path.join(pasta_solos, shp)
     try:
         gdf = gpd.read_file(caminho)
-
-        # Padronizar nomes de colunas
         gdf.columns = [col.strip().upper() for col in gdf.columns]
 
-        # Detectar e ativar a coluna de geometria correta
         geom_cols = [col for col in gdf.columns if gdf[col].dtype.name == "geometry"]
         if not geom_cols:
             arquivos_ignorados.append(f"{shp} (nenhuma coluna de geometria encontrada)")
             continue
         gdf = gdf.set_geometry(geom_cols[0])
 
-        # Garantir ao menos uma identificação de solo
         if "COD_SIMBOL" not in gdf.columns and "LEGENDA" not in gdf.columns:
             arquivos_ignorados.append(f"{shp} (sem COD_SIMBOL nem LEGENDA)")
             continue
 
-        # Se COD_SIMBOL não existir, cria com base na LEGENDA
         if "COD_SIMBOL" not in gdf.columns:
             gdf["COD_SIMBOL"] = gdf["LEGENDA"]
         else:
-            # Se COD_SIMBOL existe, mas tem valores nulos, preenche com LEGENDA
             if "LEGENDA" in gdf.columns:
                 gdf["COD_SIMBOL"] = gdf["COD_SIMBOL"].fillna(gdf["LEGENDA"])
 
-        # Verificar/ajustar CRS
         if gdf.crs is None:
             gdf.set_crs("EPSG:4674", inplace=True)
         if gdf.crs != gdf_municipios.crs:
@@ -64,121 +57,115 @@ for shp in arquivos:
         arquivos_ignorados.append(f"{shp} (erro: {str(e)})")
         continue
 
-# Mostrar arquivos ignorados
 if arquivos_ignorados:
     st.warning("Alguns arquivos foram ignorados:")
     for item in arquivos_ignorados:
         st.text(f" - {item}")
 
-# Verificar se algo foi carregado
 if not todos_solos:
     st.error("Nenhum shapefile de solo válido foi carregado.")
     st.stop()
 
-# Concatenar os arquivos válidos
 gdf_solos = gpd.GeoDataFrame(pd.concat(todos_solos, ignore_index=True))
 
-# --- 3. Selecionar município ---
+# --- Seleção de município ---
 lista_municipios = sorted(gdf_municipios["NM_MUN"].unique())
 municipio_nome = st.selectbox("Selecione um município", [""] + lista_municipios)
 
 if not municipio_nome:
     st.warning("Por favor, selecione um município no menu acima.")
-    st.stop()
-
-muni = gdf_municipios[gdf_municipios["NM_MUN"] == municipio_nome]
-
-# --- 4. Clip ou intersects ---
-clipado = gpd.clip(gdf_solos, muni)
-if clipado.empty:
-    st.warning("Nenhum solo encontrado com `clip()`. Tentando com `intersects()`...")
-    clipado = gdf_solos[gdf_solos.geometry.intersects(muni.geometry.iloc[0])]
-
-clipado["area_ha"] = clipado.geometry.area / 10_000
-
-# --- 5. Gerar cores por tipo de solo ---
-tipos_solo = clipado["COD_SIMBOL"].unique() if not clipado.empty else []
-cores = plt.cm.get_cmap('tab20', len(tipos_solo))
-mapa_cores = {
-    solo: f'#{int(cores(i)[0]*255):02x}{int(cores(i)[1]*255):02x}{int(cores(i)[2]*255):02x}'
-    for i, solo in enumerate(tipos_solo)
-}
-
-# --- 6. Criar mapa ---
-centro = muni.geometry.centroid.iloc[0].coords[0][::-1]
-m = folium.Map(location=centro, zoom_start=10)
-
-folium.GeoJson(muni, name="Município", style_function=lambda x: {
-    'fillColor': 'none', 'color': 'blue', 'weight': 2
-}).add_to(m)
-
-if not clipado.empty:
-    folium.GeoJson(
-        clipado,
-        name="Solos",
-        style_function=lambda feature: {
-            'fillColor': mapa_cores.get(feature["properties"]["COD_SIMBOL"], "#aaaaaa"),
-            'color': 'black',
-            'weight': 1,
-            'fillOpacity': 0.6
-        },
-        tooltip=folium.GeoJsonTooltip(
-            fields=["COD_SIMBOL", "area_ha"],
-            aliases=["Código do Solo:", "Área (ha):"]
-        )
-    ).add_to(m)
 else:
-    st.info("Nenhuma feição de solo encontrada.")
+    muni = gdf_municipios[gdf_municipios["NM_MUN"] == municipio_nome]
 
-folium.LayerControl().add_to(m)
-st_folium(m, width=1000, height=600)
+    def mostrar_resultados(muni):
+        clipado = gpd.clip(gdf_solos, muni)
+        if clipado.empty:
+            st.warning("Nenhum solo encontrado com `clip()`. Tentando com `intersects()`...")
+            clipado = gdf_solos[gdf_solos.geometry.intersects(muni.geometry.iloc[0])]
 
-# --- 8. Legenda visual com cor, porcentagem e descrição ---
-if not clipado.empty:
-    st.subheader("Legenda de Cores por Tipo de Solo")
+        clipado["area_ha"] = clipado.geometry.area / 10_000
+        tipos_solo = clipado["COD_SIMBOL"].unique() if not clipado.empty else []
+        cores = plt.cm.get_cmap('tab20', len(tipos_solo))
+        mapa_cores = {
+            solo: f'#{int(cores(i)[0]*255):02x}{int(cores(i)[1]*255):02x}{int(cores(i)[2]*255):02x}'
+            for i, solo in enumerate(tipos_solo)
+        }
 
-    area_total = clipado["area_ha"].sum()
-    resumo = clipado.groupby(["COD_SIMBOL", "LEGENDA"])["area_ha"].sum().reset_index()
-    resumo["percent"] = (resumo["area_ha"] / area_total * 100).round(2)
-    resumo = resumo.sort_values(by="area_ha", ascending=False)
+        centro = muni.geometry.centroid.iloc[0].coords[0][::-1]
+        m = folium.Map(location=centro, zoom_start=10)
 
-    for _, row in resumo.iterrows():
-        simbolo = row["COD_SIMBOL"]
-        descricao = row["LEGENDA"]
-        cor = mapa_cores.get(simbolo, "#aaaaaa")
-        perc = f"{row['percent']}%"
+        folium.GeoJson(muni, name="Município", style_function=lambda x: {
+            'fillColor': 'none', 'color': 'blue', 'weight': 2
+        }).add_to(m)
 
-        st.markdown(
-            f"""
-            <div style='display: flex; align-items: center; margin-bottom: 6px;'>
-                <div style='width: 25px; height: 20px; background-color:{cor}; border:1px solid #333; margin-right: 10px;'></div>
-                <span style='font-size: 16px;'><strong>{simbolo}</strong> — {perc} — {descricao}</span>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        if not clipado.empty:
+            folium.GeoJson(
+                clipado,
+                name="Solos",
+                style_function=lambda feature: {
+                    'fillColor': mapa_cores.get(feature["properties"]["COD_SIMBOL"], "#aaaaaa"),
+                    'color': 'black',
+                    'weight': 1,
+                    'fillOpacity': 0.6
+                },
+                tooltip=folium.GeoJsonTooltip(
+                    fields=["COD_SIMBOL", "area_ha"],
+                    aliases=["Código do Solo:", "Área (ha):"]
+                )
+            ).add_to(m)
+        else:
+            st.info("Nenhuma feição de solo encontrada.")
 
-    # --- 9. Botão para exportar como Shapefile (.zip) ---
-    st.subheader("Exportar Recorte como Shapefile")
+        folium.LayerControl().add_to(m)
+        st_folium(m, width=1000, height=600)
 
-    buffer = BytesIO()
-    nome_base = municipio_nome.replace(" ", "_").lower()
+        if not clipado.empty:
+            st.subheader("Legenda de Cores por Tipo de Solo")
 
-    with tempfile.TemporaryDirectory() as temp_dir:
-        shp_path = os.path.join(temp_dir, f"solo_{nome_base}.shp")
-        clipado.to_file(shp_path)
+            area_total = clipado["area_ha"].sum()
+            resumo = clipado.groupby(["COD_SIMBOL", "LEGENDA"])["area_ha"].sum().reset_index()
+            resumo["percent"] = (resumo["area_ha"] / area_total * 100).round(2)
+            resumo = resumo.sort_values(by="area_ha", ascending=False)
 
-        with zipfile.ZipFile(buffer, mode="w") as z:
-            for ext in [".shp", ".shx", ".dbf", ".prj", ".cpg"]:
-                caminho = os.path.join(temp_dir, f"solo_{nome_base}{ext}")
-                if os.path.exists(caminho):
-                    with open(caminho, "rb") as f:
-                        z.writestr(f"solo_{nome_base}{ext}", f.read())
+            for _, row in resumo.iterrows():
+                simbolo = row["COD_SIMBOL"]
+                descricao = row["LEGENDA"]
+                cor = mapa_cores.get(simbolo, "#aaaaaa")
+                perc = f"{row['percent']}%"
 
-    buffer.seek(0)
-    st.download_button(
-        label="📦 Baixar Recorte (.zip)",
-        data=buffer,
-        file_name=f"solo_{nome_base}.zip",
-        mime="application/zip"
-    )
+                st.markdown(
+                    f"""
+                    <div style='display: flex; align-items: center; margin-bottom: 6px;'>
+                        <div style='width: 25px; height: 20px; background-color:{cor}; border:1px solid #333; margin-right: 10px;'></div>
+                        <span style='font-size: 16px;'><strong>{simbolo}</strong> — {perc} — {descricao}</span>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+            st.subheader("Exportar Recorte como Shapefile")
+
+            buffer = BytesIO()
+            nome_base = municipio_nome.replace(" ", "_").lower()
+
+            with tempfile.TemporaryDirectory() as temp_dir:
+                shp_path = os.path.join(temp_dir, f"solo_{nome_base}.shp")
+                clipado.to_file(shp_path)
+
+                with zipfile.ZipFile(buffer, mode="w") as z:
+                    for ext in [".shp", ".shx", ".dbf", ".prj", ".cpg"]:
+                        caminho = os.path.join(temp_dir, f"solo_{nome_base}{ext}")
+                        if os.path.exists(caminho):
+                            with open(caminho, "rb") as f:
+                                z.writestr(f"solo_{nome_base}{ext}", f.read())
+
+            buffer.seek(0)
+            st.download_button(
+                label="📦 Baixar Recorte (.zip)",
+                data=buffer,
+                file_name=f"solo_{nome_base}.zip",
+                mime="application/zip"
+            )
+
+    # 👇 Executa o processamento completo
+    mostrar_resultados(muni)
