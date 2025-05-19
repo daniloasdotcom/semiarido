@@ -1,80 +1,79 @@
 import streamlit as st
 import geopandas as gpd
 import folium
+from folium.plugins import Fullscreen
 from streamlit_folium import st_folium
 import os
-import pandas as pd
+from utils.solos import carregar_geojson, calcular_area_por_tipo
+from utils.descricao_solos import descricao_solos
 
-# Modo wide
+# Layout wide
 st.set_page_config(layout="wide")
-st.title("Visualização Interativa do Semiárido Brasileiro")
 
-# Dropdown do tipo de solo
-tipo_solo = st.selectbox("Selecione o tipo de solo para visualizar:", ["Nenhum", "Latossolo", "Cambissolo"])
+# Colunas para centralização
+col_esq, col_centro, col_dir = st.columns([1, 6, 1])
 
-# Caminhos
-caminho_shape_semiarido = os.path.join("dados", "limites_semiarido.shp")
-geojson_solos = {
-    "Latossolo": os.path.join("dados", "latossolos_simplificado.geojson"),
-    "Cambissolo": os.path.join("dados", "cambissolos_simplificado.geojson")
-}
+with col_centro:
+    st.title("Visualização Interativa do Semiárido Brasileiro")
 
-# Cores
-cores_latossolo = {
-    "LAa": "#eb4d1c", "LAd": "#e31239", "LAdf": "#0000ff", "LAdx": "#8ce8c3", "LAe": "#c28ee8",
-    "LAw": "#0fd3f3", "LVAa": "#0000ff", "LVAd": "#f44336", "LVAe": "#de8782", "LVd": "#5e71cf",
-    "LVdf": "#0e00ff", "LVe": "#09f745", "LVw": "#99dc3c"
-}
+    tipo_solo = st.selectbox("Selecione o tipo de solo para visualizar:", ["Nenhum", "Latossolo", "Cambissolo"])
 
-cores_cambissolo = {
-    "CXa": "#ff00ff", "CXbd": "#c0d904", "CXbe": "#6f7fc7",
-    "CXk": "#c0d904", "CXve": "#b50057", "CYbe": "#6f7fc7"
-}
+    # Caminhos e cores
+    caminho_shape_semiarido = os.path.join("dados", "limites_semiarido.shp")
+    geojson_solos = {
+        "Latossolo": os.path.join("dados", "latossolos_simplificado.geojson"),
+        "Cambissolo": os.path.join("dados", "cambissolos_simplificado.geojson")
+    }
 
-# Verifica o shapefile do semiárido
-if not os.path.exists(caminho_shape_semiarido):
-    st.error("Arquivo 'limites_semiarido.shp' não encontrado.")
-else:
-    try:
-        gdf = gpd.read_file(caminho_shape_semiarido)
-        geojson_semiarido = gdf.__geo_interface__
+    cores_latossolo = {
+        "LAa": "#eb4d1c", "LAd": "#e31239", "LAdf": "#0000ff", "LAdx": "#8ce8c3", "LAe": "#c28ee8",
+        "LAw": "#0fd3f3", "LVAa": "#0000ff", "LVAd": "#f44336", "LVAe": "#de8782", "LVd": "#5e71cf",
+        "LVdf": "#0e00ff", "LVe": "#09f745", "LVw": "#99dc3c"
+    }
 
-        bounds = gdf.total_bounds
-        centro_lat = (bounds[1] + bounds[3]) / 2
-        centro_lon = (bounds[0] + bounds[2]) / 2
+    cores_cambissolo = {
+        "CXa": "#ff00ff", "CXbd": "#c0d904", "CXbe": "#6f7fc7",
+        "CXk": "#c0d904", "CXve": "#b50057", "CYbe": "#6f7fc7"
+    }
 
-        m = folium.Map(location=[centro_lat, centro_lon], zoom_start=6, tiles="CartoDB positron")
+    if not os.path.exists(caminho_shape_semiarido):
+        st.error("Arquivo 'limites_semiarido.shp' não encontrado.")
+    else:
+        try:
+            gdf = gpd.read_file(caminho_shape_semiarido)
+            bounds = gdf.total_bounds
+            centro_lat = (bounds[1] + bounds[3]) / 2
+            centro_lon = (bounds[0] + bounds[2]) / 2
 
-        # Contorno do semiárido
-        folium.GeoJson(
-            geojson_semiarido,
-            name="Limites do Semiárido",
-            style_function=lambda feature: {
-                'fillColor': 'none',
-                'color': 'black',
-                'weight': 3
-            }
-        ).add_to(m)
+            # Mapa base com tela cheia e controle reposicionado
+            m = folium.Map(location=[centro_lat, centro_lon], zoom_start=6, tiles="CartoDB positron", control_scale=True)
+            Fullscreen(position="topright", title="Tela cheia", title_cancel="Sair da tela cheia").add_to(m)
 
-        # Adiciona os solos se selecionado
-        if tipo_solo in ["Latossolo", "Cambissolo"]:
-            caminho_geojson = geojson_solos[tipo_solo]
-            if os.path.exists(caminho_geojson):
-                gdf_solo = gpd.read_file(caminho_geojson)
+            # Contorno do semiárido
+            folium.GeoJson(
+                gdf.__geo_interface__,
+                name="Limites do Semiárido",
+                style_function=lambda feature: {
+                    'fillColor': 'none',
+                    'color': 'black',
+                    'weight': 3
+                }
+            ).add_to(m)
 
-                if "cod_simbol" in gdf_solo.columns and "legenda" in gdf_solo.columns:
-                    tipos_unicos = gdf_solo["cod_simbol"].unique()
+            if tipo_solo in geojson_solos:
+                caminho = geojson_solos[tipo_solo]
+                gdf_solo = carregar_geojson(caminho)
+
+                if gdf_solo is not None and "cod_simbol" in gdf_solo.columns and "legenda" in gdf_solo.columns:
                     cores = cores_latossolo if tipo_solo == "Latossolo" else cores_cambissolo
 
-                    # Adiciona camadas ao mapa
-                    for tipo in tipos_unicos:
-                        gdf_tipo = gdf_solo[gdf_solo["cod_simbol"] == tipo]
-                        geojson_tipo = gdf_tipo.__geo_interface__
+                    for tipo in gdf_solo["cod_simbol"].unique():
+                        geojson_tipo = gdf_solo[gdf_solo["cod_simbol"] == tipo].__geo_interface__
                         cor = cores.get(tipo, "#888888")
 
                         folium.GeoJson(
                             geojson_tipo,
-                            name=f"{tipo_solo} {tipo}",
+                            name=tipo,  # Apenas o código no LayerControl
                             style_function=lambda feature, cor=cor: {
                                 'fillColor': cor,
                                 'color': cor,
@@ -83,22 +82,8 @@ else:
                             }
                         ).add_to(m)
 
-                    # LEGENDAS COM ÁREA E PORCENTAGEM
-                    try:
-                        gdf_area = gdf_solo.to_crs(epsg=5880)
-                    except:
-                        gdf_area = gdf_solo.to_crs(gdf_solo.estimate_utm_crs())
-
-                    gdf_area["area_km2"] = gdf_area["geometry"].area / 1_000_000
-
-                    df_legenda = gdf_area.groupby(["cod_simbol", "legenda"]).agg(
-                        area_km2=("area_km2", "sum")
-                    ).reset_index()
-
-                    area_total = df_legenda["area_km2"].sum()
-                    df_legenda["percentual"] = (df_legenda["area_km2"] / area_total * 100).round(2)
-                    df_legenda = df_legenda.sort_values(by="area_km2", ascending=False)
-
+                    # Legenda com cor, área e % em HTML
+                    df_legenda = calcular_area_por_tipo(gdf_solo)
                     st.markdown(f"### Legenda dos {tipo_solo}s")
 
                     for _, row in df_legenda.iterrows():
@@ -116,12 +101,23 @@ else:
                             unsafe_allow_html=True
                         )
                 else:
-                    st.warning("Colunas 'cod_simbol' ou 'legenda' não encontradas no GeoJSON.")
+                    st.warning("GeoJSON inválido ou sem colunas 'cod_simbol' e 'legenda'.")
             else:
-                st.warning(f"Arquivo '{caminho_geojson}' não encontrado.")
+                st.warning(f"Arquivo do solo '{tipo_solo}' não encontrado.")
 
-        folium.LayerControl(collapsed=False).add_to(m)
-        st_folium(m, width=1000, height=1200)
+            # Controles de mapa
+            folium.LayerControl(collapsed=False, position="topleft").add_to(m)
 
-    except Exception as e:
-        st.error(f"Ocorreu um erro ao processar os dados: {e}")
+            # Espaço e exibição do mapa
+            st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
+            st_folium(m, width=1000, height=1000)
+
+            # Descrição abaixo do mapa
+            st.markdown("<div style='margin-top: 3rem;'></div>", unsafe_allow_html=True)
+            chave = "LATOSSOLOS" if tipo_solo == "Latossolo" else "CX" if tipo_solo == "Cambissolo" else None
+            if chave and chave in descricao_solos:
+                st.markdown("### Sobre este tipo de solo")
+                st.markdown(descricao_solos[chave], unsafe_allow_html=True)
+
+        except Exception as e:
+            st.error(f"Erro ao processar os dados: {e}")

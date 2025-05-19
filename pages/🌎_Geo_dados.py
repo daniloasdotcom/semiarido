@@ -2,8 +2,8 @@ import streamlit as st
 st.set_page_config(layout="wide")
 
 import os
-from soil_config.config import CAMINHO_SHAPES, CAMADAS_DISPONIVEIS, CAMADAS_GEOMORFOLOGIA
-from soil_config.descricao_solos import descricao_solos
+from soil_config.config import CAMINHO_SHAPES, CAMADAS_GEOMORFOLOGIA
+from utils.descricao_solos import descricao_solos
 from soil_config.mapa_solos import gerar_mapa_solos
 from streamlit_folium import folium_static
 
