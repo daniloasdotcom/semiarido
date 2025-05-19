@@ -2,9 +2,7 @@ import geopandas as gpd
 import folium
 from soil_config.config import CORES_SOLOS, CORES_GEOMORFOLOGIA
 
-def adicionar_camada_solo(mapa, nome, legenda, caminho):
-    gdf = gpd.read_file(caminho)
-
+def adicionar_camada_solo(mapa, nome, legenda, gdf):
     cor = CORES_SOLOS.get(nome, "#666666")
 
     estilo = lambda feature: {

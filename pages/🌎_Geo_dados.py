@@ -69,7 +69,6 @@ else:
     with col2:
         st.markdown(f"<h2 style='text-align: center;'>{titulo}</h2>", unsafe_allow_html=True)
 
-    # Voltando a usar arquivos .shp
     arquivos_shape = sorted([
         f for f in os.listdir(CAMINHO_SHAPES) if f.endswith(".shp")
     ])
@@ -94,7 +93,7 @@ else:
     with col2:
         with st.spinner("🔄 Carregando dados do solo e gerando o mapa..."):
             mapa, gdf_clipado = gerar_mapa_solos(prefixo, todos_os_simbolos, camadas_geomorfologia)
-            folium_static(mapa, height=1000, width=2000)
+            folium_static(mapa, width=1200, height=800)
 
         if not gdf_clipado.empty and "COD_SIMBOL" in gdf_clipado.columns:
             st.subheader("Legenda de Cores por Tipo de Solo")
