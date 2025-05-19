@@ -112,20 +112,25 @@ else:
         }).add_to(m)
 
         if not clipado.empty:
-            folium.GeoJson(
-                clipado,
-                name="Solos",
-                style_function=lambda feature: {
-                    'fillColor': mapa_cores.get(feature["properties"]["COD_SIMBOL"], "#aaaaaa"),
-                    'color': 'black',
-                    'weight': 1,
-                    'fillOpacity': 0.6
-                },
-                tooltip=folium.GeoJsonTooltip(
-                    fields=["COD_SIMBOL", "area_ha"],
-                    aliases=["Código do Solo:", "Área (ha):"]
-                )
-            ).add_to(m)
+            if not clipado.empty:
+                for solo_tipo in clipado["COD_SIMBOL"].unique():
+                    camada = clipado[clipado["COD_SIMBOL"] == solo_tipo]
+                    cor = mapa_cores.get(solo_tipo, "#aaaaaa")
+
+                    folium.GeoJson(
+                        camada,
+                        name=solo_tipo,  # Apenas o símbolo
+                        style_function=lambda feature, cor=cor: {
+                            'fillColor': cor,
+                            'color': 'black',
+                            'weight': 1,
+                            'fillOpacity': 0.6
+                        },
+                        tooltip=folium.GeoJsonTooltip(
+                            fields=["COD_SIMBOL", "area_ha"],
+                            aliases=["Código do Solo:", "Área (ha):"]
+                        )
+                    ).add_to(m)
         else:
             st.info("Nenhuma feição de solo encontrada.")
 
