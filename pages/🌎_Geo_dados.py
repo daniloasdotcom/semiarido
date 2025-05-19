@@ -7,14 +7,13 @@ from soil_config.descricao_solos import descricao_solos
 from soil_config.mapa_solos import gerar_mapa_solos
 from streamlit_folium import folium_static
 
-# CSS para centralizar o spinner
+# ----------------- CSS: Spinner centralizado -----------------
 st.markdown("""
     <style>
     .css-1v0mbdj {
         display: flex;
         justify-content: center;
     }
-
     .stSpinner {
         position: fixed;
         top: 50%;
@@ -30,7 +29,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Menu lateral
+# ----------------- Sidebar -----------------
 st.sidebar.title("🧱 GeoSAB - Solos")
 st.sidebar.markdown("Selecione uma classe de solo para visualizar com outras camadas")
 
@@ -53,17 +52,39 @@ opcao_solo = st.sidebar.radio(
     key="selecao_solo"
 )
 
-# Se quiser, selecione também as camadas de geomorfologia
 st.sidebar.markdown("---")
 camadas_geomorfologia = st.sidebar.multiselect(
     "🗺️ Camadas geomorfológicas (opcional):",
     options=list(CAMADAS_GEOMORFOLOGIA.keys())
 )
 
-# Layout central
+# ----------------- Cache: Listagem dos shapefiles disponíveis -----------------
+@st.cache_data
+def listar_simbolos_disponiveis():
+    arquivos = sorted([f for f in os.listdir(CAMINHO_SHAPES) if f.endswith(".shp")])
+    return [arquivo.replace(".shp", "") for arquivo in arquivos]
+
+todos_os_simbolos = listar_simbolos_disponiveis()
+
+# ----------------- Mapeamento de prefixos -----------------
+grupo_para_prefixo = {
+    "Cambissolos": ("C", "CX"),
+    "Luvissolos": ("T", "TC"),
+    "Latossolos": ("L", "LATOSSOLOS"),
+    "Planossolos": ("S", None),
+    "Neossolos": ("R", None),
+    "Argissolos": ("P", None),
+    "Vertissolos": ("V", None),
+    "Gleissolos": ("G", None),
+    "Chernossolos": ("M", None),
+    "Plintossolos": ("F", None),
+    "Nitossolos": ("N", None)
+}
+
+# ----------------- Layout central -----------------
 col1, col2, col3 = st.columns([1, 5, 1])
 
-# Se o usuário ainda não selecionou um solo
+# ----------------- Página inicial -----------------
 if opcao_solo == "Selecionar...":
     with col2:
         st.markdown("<h2 style='text-align: center;'>Bem-vindo ao GeoSAB - Solos</h2>", unsafe_allow_html=True)
@@ -74,38 +95,31 @@ if opcao_solo == "Selecionar...":
         </p>
         """, unsafe_allow_html=True)
 
-# Quando um solo é selecionado
+# ----------------- Quando um solo é selecionado -----------------
 else:
     titulo = f"{opcao_solo} no Semiárido"
+    prefixo, chave_desc = grupo_para_prefixo.get(opcao_solo, ("", None))
 
     with col2:
         st.markdown(f"<h2 style='text-align: center;'>{titulo}</h2>", unsafe_allow_html=True)
 
-    arquivos_shape = sorted([
-        f for f in os.listdir(CAMINHO_SHAPES)
-        if f.endswith(".shp")
-    ])
-    todos_os_simbolos = [arquivo.replace(".shp", "") for arquivo in arquivos_shape]
+    # Cache para evitar recarregamento desnecessário
+    if "ultimo_solo" not in st.session_state or st.session_state.ultimo_solo != opcao_solo or \
+       st.session_state.get("camadas_geomorfologia") != camadas_geomorfologia:
 
-    grupo_para_prefixo = {
-        "Cambissolos": ("C", "CX"),
-        "Luvissolos": ("T", "TC"),
-        "Latossolos": ("L", "LATOSSOLOS"),
-        "Planossolos": ("S", None),
-        "Neossolos": ("R", None),
-        "Argissolos": ("P", None),
-        "Vertissolos": ("V", None),
-        "Gleissolos": ("G", None),
-        "Chernossolos": ("M", None),
-        "Plintossolos": ("F", None)
-    }
+        with col2:
+            with st.spinner("🔄 Carregando dados e gerando o mapa..."):
+                mapa = gerar_mapa_solos(prefixo, todos_os_simbolos, camadas_geomorfologia)
+                st.session_state["mapa"] = mapa
+                st.session_state["ultimo_solo"] = opcao_solo
+                st.session_state["camadas_geomorfologia"] = camadas_geomorfologia
 
-    prefixo, chave_desc = grupo_para_prefixo.get(opcao_solo, ("", None))
-
+    # Renderiza mapa já salvo em sessão
     with col2:
-        with st.spinner("🔄 Carregando dados do solo e gerando o mapa..."):
-            mapa = gerar_mapa_solos(prefixo, todos_os_simbolos, camadas_geomorfologia)
-            folium_static(mapa, height=1000, width=2000)
+        if "mapa" in st.session_state:
+            folium_static(st.session_state["mapa"], height=1000, width=2000)
 
-        if chave_desc and chave_desc in descricao_solos:
+    # Adiciona descrição, se houver
+    if chave_desc and chave_desc in descricao_solos:
+        with col2:
             st.markdown(descricao_solos[chave_desc], unsafe_allow_html=True)
