@@ -2,34 +2,44 @@ import geopandas as gpd
 import pandas as pd
 import os
 
-# Lista dos nomes dos arquivos de Latossolos
-nomes_latossolos = [
-    "LAa", "LAd", "LAdf", "LAdx", "LAe", "LAw",
-    "LVAa", "LVAd", "LVAe", "LVd", "LVdf", "LVe", "LVw"
-]
+# Lista dos códigos de Cambissolos
+cambissolos = ["CXa", "CXbd", "CXbe", "CXk", "CXve", "CYbe"]
 
-# Pasta onde estão os shapefiles
+# Caminho base
 pasta = "dados/solos_sab250"
 
-# Lista para guardar os GeoDataFrames
+# Tolerância de simplificação (ajuste conforme necessário)
+tolerancia = 0.01  # ~1km de simplificação
+
 gdfs = []
 
-# Tolerância de simplificação (ajuste conforme necessário)
-tolerancia = 0.01  # Aproximadamente 1 km de simplificação
-
-for nome in nomes_latossolos:
+for nome in cambissolos:
     caminho = os.path.join(pasta, f"{nome}.shp")
     if os.path.exists(caminho):
+        print(f"Lendo {nome}...")
         gdf = gpd.read_file(caminho)
-        gdf["origem"] = nome  # opcional: marca a origem
+
+        # Verificação mínima
+        if "cod_simbol" not in gdf.columns:
+            gdf["cod_simbol"] = nome  # se não existir, cria
+
+        if "legenda" not in gdf.columns:
+            gdf["legenda"] = nome  # ou você pode definir descrições personalizadas
+
+        # Simplificação
         gdf["geometry"] = gdf["geometry"].simplify(tolerance=tolerancia, preserve_topology=True)
+
         gdfs.append(gdf)
+    else:
+        print(f"Arquivo não encontrado: {caminho}")
 
-# Junta tudo em um único GeoDataFrame
-gdf_final = gpd.GeoDataFrame(pd.concat(gdfs, ignore_index=True), crs=gdfs[0].crs)
+# Junta todos os tipos
+if gdfs:
+    gdf_final = gpd.GeoDataFrame(pd.concat(gdfs, ignore_index=True), crs=gdfs[0].crs)
 
-# Exporta para GeoJSON
-saida = "dados/latossolos_simplificado.geojson"
-gdf_final.to_file(saida, driver="GeoJSON")
-
-print("GeoJSON exportado com sucesso:", saida)
+    # Salva como GeoJSON
+    saida = "dados/cambissolos_simplificado.geojson"
+    gdf_final.to_file(saida, driver="GeoJSON")
+    print(f"Arquivo exportado para {saida}")
+else:
+    print("Nenhum arquivo de Cambissolo foi carregado.")
