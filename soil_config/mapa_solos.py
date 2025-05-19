@@ -51,14 +51,16 @@ def gerar_mapa_solos(prefixo, todos_os_simbolos, camadas_geomorfologicas):
         })
 
         for simb in simbolos_filtrados:
-            caminho = os.path.join(CAMINHO_SHAPES, f"{simb}.shp")
+            caminho = os.path.join(CAMINHO_SHAPES, f"{simb}.gpkg")
             try:
-                gdf = gpd.read_file(caminho)
+                gdf = gpd.read_file(caminho, layer=simb)
                 gdf["COD_SIMBOL"] = simb
                 if "LEGENDA" not in gdf.columns:
                     gdf["LEGENDA"] = gdf.get("legenda", simb)
                 gdfs.append(gdf)
-                adicionar_camada_solo(mapa, simb, f"Solo {simb}", caminho)
+
+                # Atualize aqui se a função também precisa receber .gpkg
+                adicionar_camada_solo(mapa, simb, f"Solo {simb}", caminho, layer=simb)
             except Exception as e:
                 st.warning(f"Erro ao carregar {simb}: {e}")
 
