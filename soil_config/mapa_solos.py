@@ -21,6 +21,12 @@ def gerar_mapa_solos(prefixo, todos_os_simbolos, camadas_geomorfologicas):
         ).add_to(mapa)
 
         folium.TileLayer(
+            tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            name="Satélite (Esri)",
+            attr="Tiles © Esri & the GIS community"
+        ).add_to(mapa)
+
+        folium.TileLayer(
             tiles='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
             name='Claro',
             attr='© CartoDB'

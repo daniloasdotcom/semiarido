@@ -92,7 +92,20 @@ else:
         }
 
         centro = muni.geometry.centroid.iloc[0].coords[0][::-1]
-        m = folium.Map(location=centro, zoom_start=10)
+        m = folium.Map(location=centro, zoom_start=10, tiles=None)
+
+        # Camadas de base
+        folium.TileLayer(
+            tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            name="Satélite (Esri)",
+            attr="Tiles © Esri & the GIS community"
+        ).add_to(m)
+
+        folium.TileLayer(
+            tiles="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            name="Mapa padrão (OSM)",
+            attr="© OpenStreetMap contributors"
+        ).add_to(m)
 
         folium.GeoJson(muni, name="Município", style_function=lambda x: {
             'fillColor': 'none', 'color': 'blue', 'weight': 2
