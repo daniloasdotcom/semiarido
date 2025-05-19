@@ -6,33 +6,28 @@ import os
 
 st.title("Visualização Interativa do Semiárido Brasileiro")
 
-# === Checkbox para mostrar latossolos ===
+# Checkbox para ativar a visualização dos Latossolos
 mostrar_latossolos = st.checkbox("Mostrar Latossolos")
 
-# Caminho para o shape do semiárido
+# Caminho para os arquivos
 caminho_shape_semiarido = os.path.join("dados", "limites_semiarido.shp")
+caminho_geojson_latossolos = os.path.join("dados", "latossolos_simplificado.geojson")
 
-# Lista dos nomes dos arquivos dos latossolos
-nomes_latossolos = [
-    "LAa", "LAd", "LAdf", "LAdx", "LAe", "LAw",
-    "LVAa", "LVAd", "LVAe", "LVd", "LVdf", "LVe", "LVw"
-]
-
-# Pasta onde estão os shapes de solos
-pasta_solos = os.path.join("dados", "solos_sab250")
-
-# Carrega e exibe o shape do semiárido
+# Verifica se o shape do semiárido existe
 if not os.path.exists(caminho_shape_semiarido):
-    st.error("Arquivo 'limites_semiarido.shp' não encontrado na pasta 'dados'.")
+    st.error("Arquivo 'limites_semiarido.shp' não encontrado.")
 else:
     try:
+        # Carrega o shapefile do semiárido
         gdf = gpd.read_file(caminho_shape_semiarido)
         geojson_semiarido = gdf.__geo_interface__
 
-        bounds = gdf.total_bounds
+        # Centraliza no centro da geometria
+        bounds = gdf.total_bounds  # [minx, miny, maxx, maxy]
         centro_lat = (bounds[1] + bounds[3]) / 2
         centro_lon = (bounds[0] + bounds[2]) / 2
 
+        # Cria o mapa
         m = folium.Map(location=[centro_lat, centro_lon], zoom_start=6, tiles="CartoDB positron")
 
         # Adiciona o contorno do semiárido
@@ -46,30 +41,27 @@ else:
             }
         ).add_to(m)
 
-        # === Adiciona os Latossolos se checkbox estiver marcada ===
+        # Se a checkbox estiver marcada, carrega o GeoJSON dos Latossolos
         if mostrar_latossolos:
-            for nome in nomes_latossolos:
-                caminho_shp = os.path.join(pasta_solos, f"{nome}.shp")
-                if os.path.exists(caminho_shp):
-                    gdf_lato = gpd.read_file(caminho_shp)
-                    geojson_lato = gdf_lato.__geo_interface__
+            if os.path.exists(caminho_geojson_latossolos):
+                gdf_lato = gpd.read_file(caminho_geojson_latossolos)
+                geojson_lato = gdf_lato.__geo_interface__
 
-                    folium.GeoJson(
-                        geojson_lato,
-                        name=f"Latossolo {nome}",
-                        style_function=lambda feature: {
-                            'fillColor': '#FF8C00',   # laranja suave
-                            'color': '#FF4500',
-                            'weight': 1,
-                            'fillOpacity': 0.4
-                        },
-                        tooltip=folium.GeoJsonTooltip(fields=[],
-                                                      aliases=[],
-                                                      labels=False)
-                    ).add_to(m)
+                folium.GeoJson(
+                    geojson_lato,
+                    name="Latossolos",
+                    style_function=lambda feature: {
+                        'fillColor': '#FF8C00',    # Laranja suave
+                        'color': '#FF4500',
+                        'weight': 1,
+                        'fillOpacity': 0.4
+                    }
+                ).add_to(m)
+            else:
+                st.warning("Arquivo 'latossolos_simplificado.geojson' não encontrado.")
 
-        # Mostra o mapa ampliado
+        # Exibe o mapa
         st_folium(m, width=1000, height=1500)
 
     except Exception as e:
-        st.error(f"Erro ao processar os dados: {e}")
+        st.error(f"Ocorreu um erro ao processar os dados: {e}")
