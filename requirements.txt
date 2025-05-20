@@ -5,3 +5,4 @@ streamlit_folium==0.25.0
 gdown
 pyogrio
 matplotlib
+openai
