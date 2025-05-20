@@ -33,10 +33,10 @@ st.subheader("🔬 Formação e Pesquisa")
 st.markdown(
     """
     - Agrônomo  
-    - Professor de Bioquímica  
+    - Professor de Bioquímica (UFES - 2022-2024)
     - Pesquisador em Produção Vegetal (M.Sc., D.Sc. - UFES)  
     - Especialista em Biocarvões (desde 2012)  
-    - [Especialista em Agroecologia](https://daniloasdotcom.github.io/agroecosystems/home)  
+    - [Especialista em Agroecologia (IFES)](https://agroecossistemas.online/home)  
     - Especializando em Bioinsumos (IFGO)  
     - Cursando Compl. Pedag. em Química (IFES)  
     """,
@@ -48,7 +48,7 @@ st.markdown(
     """
     - Gestor de IA  
     - Programador Jr. Web/Mobile  
-    - Analista de dados (Python, VBA, R)  
+    - Analista de dados (Python, VBA, R, SIG)  
     - Cursando Análise e Des. de Sistemas (UNIP)  
     - Especializando em IA na Agricultura (UTFPR)  
     """
