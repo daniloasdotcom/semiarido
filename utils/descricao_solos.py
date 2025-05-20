@@ -1,35 +1,58 @@
 # soil_config/descricao_solos.py
 
 descricao_solos = {
-    "CX": """
-    <div style="text-align: justify;">
-    <p>
-    Os <strong>Cambissolos</strong> representam uma classe de solos <strong>minerais e não hidromórficos</strong> amplamente distribuída no Semiárido brasileiro. Caracterizam-se pela presença de um <strong>horizonte B incipiente (Bi)</strong>, que reflete um estágio inicial de intemperismo. Apesar de apresentarem certo desenvolvimento de perfil, ainda possuem um <strong>baixo grau de intemperização</strong>, com presença de minerais primários e evidências morfológicas que indicam a juventude do solo.
-    </p>
+    "CAMBISSOLOS": """
+    <div style="text-align: justify; font-size: 1rem; line-height: 1.7;">
+
+      <h4>🧬 Características Gerais</h4>
+      <p>
+        Os <strong>Cambissolos</strong> são solos <strong>minerais, não hidromórficos</strong>, amplamente distribuídos no Semiárido brasileiro. São caracterizados pela presença de um <strong>horizonte B incipiente (Bi)</strong>, indicando estágio inicial de intemperismo. Apesar de algum desenvolvimento no perfil, apresentam <strong>baixo grau de intemperização</strong> com minerais primários ainda presentes.
+      </p>
     
-    <p>
-    Embora alguns Cambissolos possam apresentar <strong>semelhanças morfológicas com Latossolos</strong>, especialmente em colorações e estrutura, distinguem-se por diversas propriedades químicas e físicas. Entre essas diferenças, destacam-se a <strong>menor espessura do horizonte Bi</strong> (inferior a 50 cm), <strong>maiores teores de minerais primários</strong, <strong>menor CTC</strong>, <strong>valores de Ki superiores a 2,2</strong> e <strong>teores mais elevados de sílica em profundidade</strong>. Essas características indicam um material de origem menos intemperizado e, consequentemente, um solo com propriedades distintas de uso e manejo.
-    </p>
+      <h4>🧪 Diferenças com Latossolos</h4>
+      <p>
+        Embora morfologicamente semelhantes aos Latossolos em alguns casos, os Cambissolos se distinguem por:
+      </p>
+      <ul>
+        <li><strong>Horizonte Bi mais fino</strong> (menos de 50 cm)</li>
+        <li><strong>Maior teor de minerais primários</strong></li>
+        <li><strong>Menor capacidade de troca de cátions (CTC)</strong></li>
+        <li><strong>Valores de Ki superiores a 2,2</strong></li>
+        <li><strong>Teores mais elevados de sílica em profundidade</strong></li>
+      </ul>
     
-    <p>
-    Do ponto de vista da <strong>fertilidade natural</strong>, os Cambissolos podem variar entre <strong>eutróficos e distróficos</strong>. Os Cambissolos eutróficos apresentam maior teor de bases trocáveis, o que lhes confere um <strong>potencial agrícola significativo</strong>, especialmente quando manejados de forma adequada. No entanto, devido à sua <strong>alta variabilidade</strong> quanto à profundidade, textura e fertilidade, os planos de uso agrícola devem ser elaborados caso a caso, considerando as características locais.
-    </p>
+      <h4>🌱 Fertilidade e Potencial Agrícola</h4>
+      <p>
+        Podem variar entre <strong>eutróficos</strong> (maior teor de bases trocáveis) e <strong>distróficos</strong>. Os eutróficos oferecem <strong>bom potencial agrícola</strong>, mas a <strong>alta variabilidade</strong> de profundidade, textura e fertilidade exige planejamento individualizado para uso agrícola sustentável.
+      </p>
     
-    <p>
-    Esses solos ocorrem em diferentes <strong>ambientes geológicos e geomorfológicos</strong>, desde áreas de relevo suave ondulado sobre rochas cristalinas até <strong>planícies aluviais</strong>. Nestes últimos casos, o acúmulo de finos e a possibilidade de <strong>saturação hídrica temporária</strong> podem impor <strong>restrições ao uso agrícola</strong>, como a limitação da mecanização, menor aeração do solo e risco de compactação. Portanto, nessas áreas, o <strong>planejamento do uso do solo e práticas conservacionistas</strong> são essenciais para evitar degradações.
-    </p>
+      <h4>🗺️ Distribuição Geográfica</h4>
+      <p>
+        Os Cambissolos ocorrem em ambientes variados, desde <strong>rochas cristalinas</strong> com relevo suave ondulado até <strong>planícies aluviais</strong>. Nessas últimas, a <strong>saturação hídrica temporária</strong> impõe restrições como menor aeração, risco de compactação e dificuldade de mecanização.
+      </p>
     
-    <p>
-    Quanto ao <strong>manejo agrícola</strong>, os Cambissolos demandam atenção especial à <strong>correta adubação</strong> e à <strong>preservação da estrutura superficial</strong>, devido à sua suscetibilidade à erosão, sobretudo em áreas com menor cobertura vegetal. O uso de <strong>plantas de cobertura</strong>, <strong>cultivo em nível</strong>, <strong>rotação de culturas</strong> e <strong>adubação verde</strong> são estratégias recomendadas para aumentar a resiliência do solo e garantir uma produção mais sustentável.
-    </p>
+      <h4>🚜 Manejo Recomendado</h4>
+      <p>
+        Demandam práticas conservacionistas para conter a erosão e manter produtividade. Recomenda-se:
+      </p>
+      <ul>
+        <li><strong>Adubação adequada</strong></li>
+        <li><strong>Preservação da estrutura superficial</strong></li>
+        <li><strong>Uso de plantas de cobertura</strong></li>
+        <li><strong>Cultivo em nível e rotação de culturas</strong></li>
+        <li><strong>Adubação verde</strong></li>
+      </ul>
     
-    <p>
-    A <strong>distribuição geográfica</strong> dos Cambissolos no Semiárido abrange amplas extensões na <strong>Bahia</strong>, no <strong>norte de Minas Gerais</strong> e na região da <strong>Serra do Apodi</strong>, na divisa entre o <strong>Ceará e o Rio Grande do Norte</strong>. Nessas áreas, representam uma importante base para a agricultura de sequeiro e sistemas integrados de produção, sendo frequentemente utilizados para o cultivo de <strong>milho, feijão, palma forrageira</strong> e outras culturas adaptadas ao clima semiárido.
-    </p>
+      <h4>🌍 Regiões de Ocorrência</h4>
+      <p>
+        Presentes em áreas extensas da <strong>Bahia</strong>, <strong>norte de Minas Gerais</strong> e na região da <strong>Serra do Apodi</strong> (divisa CE-RN). Utilizados para <strong>milho</strong>, <strong>feijão</strong>, <strong>palma forrageira</strong> e outras culturas adaptadas ao Semiárido.
+      </p>
     
-    <p>
-    Em síntese, os Cambissolos do Semiárido brasileiro são <strong>solos jovens, heterogêneos e de potencial agrícola variável</strong>, que exigem práticas de manejo adaptadas às suas limitações e potencialidades. Com o uso de técnicas apropriadas, esses solos podem ser aliados importantes no desenvolvimento da agricultura sustentável na região semiárida.
-    </p>
+      <h4>📌 Conclusão</h4>
+      <p>
+        Os Cambissolos são <strong>solos jovens, heterogêneos e com potencial agrícola variável</strong>. Quando bem manejados, são aliados importantes na construção de uma <strong>agricultura sustentável</strong> no Semiárido brasileiro.
+      </p>
+    
     </div>
     """,
     "TC": """

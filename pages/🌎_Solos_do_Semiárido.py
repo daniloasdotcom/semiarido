@@ -14,6 +14,25 @@ st.set_page_config(layout="wide")
 col_esq, col_centro, col_dir = st.columns([1, 6, 1])
 
 with col_centro:
+    st.markdown("""
+        <script>
+            const body = window.parent.document.body;
+            const spinner = document.createElement("div");
+            spinner.id = "global-spinner";
+            spinner.innerHTML = '<div style="position:fixed; top:1rem; right:1rem; background:#f0f0f0; padding:10px 20px; border:1px solid #ccc; border-radius:5px; z-index:9999; box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-family:sans-serif;">🔄 Carregando...</div>';
+            if (!body.querySelector("#global-spinner")) {
+                body.appendChild(spinner);
+            }
+            const observer = new MutationObserver(() => {
+                const status = body.querySelector('[data-testid="stStatusWidget"]');
+                if (status && status.style.display === "none") {
+                    const existing = body.querySelector("#global-spinner");
+                    if (existing) existing.remove();
+                }
+            });
+            observer.observe(body, { childList: true, subtree: true });
+        </script>
+    """, unsafe_allow_html=True)
     st.title("Visualização Interativa do Semiárido Brasileiro")
 
     tipo_solo = st.selectbox("Selecione o tipo de solo para visualizar:", ["Nenhum", "Latossolo", "Cambissolo"])
@@ -40,10 +59,13 @@ with col_centro:
         st.error("Arquivo 'limites_semiarido.shp' não encontrado.")
     else:
         try:
-            gdf = gpd.read_file(caminho_shape_semiarido)
-            bounds = gdf.total_bounds
-            centro_lat = (bounds[1] + bounds[3]) / 2
-            centro_lon = (bounds[0] + bounds[2]) / 2
+            with st.spinner("🔄 Carregando dados e montando o mapa..."):
+                gdf = gpd.read_file(caminho_shape_semiarido)
+                bounds = gdf.total_bounds
+                centro_lat = (bounds[1] + bounds[3]) / 2
+                centro_lon = (bounds[0] + bounds[2]) / 2
+
+                # Criação do mapa base ...
 
             # Criação do mapa base sem camada padrão
             m = folium.Map(location=[centro_lat, centro_lon], zoom_start=6, tiles=None, control_scale=True)
@@ -173,7 +195,7 @@ with col_centro:
 
             # Descrição do solo
             st.markdown("<div style='margin-top: 3rem;'></div>", unsafe_allow_html=True)
-            chave = "LATOSSOLOS" if tipo_solo == "Latossolo" else "CX" if tipo_solo == "Cambissolo" else None
+            chave = "LATOSSOLOS" if tipo_solo == "Latossolo" else "CAMBISSOLOS" if tipo_solo == "Cambissolo" else None
             if chave and chave in descricao_solos:
                 st.markdown("### Sobre este tipo de solo")
                 st.markdown(descricao_solos[chave], unsafe_allow_html=True)
