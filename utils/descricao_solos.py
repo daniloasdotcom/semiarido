@@ -189,5 +189,59 @@ descricao_solos = {
       </p>
     
     </div>
+    """,
+    "ARGISSOLOS": """
+    <div style="text-align: justify; font-size: 1rem; line-height: 1.7;">
+
+      <h4>🧬 Características Gerais</h4>
+      <p>
+        Os <strong>Argissolos</strong> são solos minerais, com desenvolvimento moderado, caracterizados principalmente pela <strong>presença de um horizonte B textural (Bt)</strong> com acúmulo de argila por iluviação. São encontrados amplamente no Semiárido brasileiro e apresentam grande <strong>variação em profundidade, cor, fertilidade e textura</strong>, o que impacta diretamente no seu uso agrícola.
+      </p>
+    
+      <h4>🏗️ Morfologia e Perfil</h4>
+      <p>
+        O perfil típico apresenta um horizonte A claro e com textura média ou arenosa, seguido por um horizonte Bt argiloso, estruturado, muitas vezes com <strong>transição abrupta</strong>. A presença de <strong>feições de iluviação</strong>, como revestimentos argilosos em poros ou peds, é comum. A profundidade e espessura do Bt podem variar conforme o subgrupo.
+      </p>
+    
+      <h4>🧪 Propriedades Químicas</h4>
+      <p>
+        Apresentam desde <strong>alta fertilidade natural</strong> nos eutróficos até baixa fertilidade nos distróficos. A saturação por bases pode ser superior ou inferior a 50%, e o pH varia de ácido a neutro, dependendo do material de origem.
+      </p>
+      <ul>
+        <li><strong>CTC:</strong> geralmente entre 10 e 20 cmol<sub>c</sub>/kg</li>
+        <li><strong>Ki:</strong> intermediário, refletindo argilas 2:1 ou mistas</li>
+        <li><strong>Textura:</strong> franco-arenosa a argilosa</li>
+      </ul>
+    
+      <h4>📚 Subgrupos Comuns</h4>
+      <p>
+        Os Argissolos no Semiárido incluem uma variedade de subgrupos, como:
+      </p>
+      <ul>
+        <li><strong>Argissolos Vermelhos (PVe, PVd, PVa)</strong></li>
+        <li><strong>Argissolos Amarelos (PAe, PACd)</strong></li>
+        <li><strong>Argissolos Vermelho-Amarelos (PVAe, PVAd)</strong></li>
+        <li><strong>Subgrupos Xênicos (PAdx)</strong>, com material inconsolidado próximo à superfície</li>
+      </ul>
+    
+      <h4>🌍 Distribuição e Ambientes</h4>
+      <p>
+        São comuns em <strong>áreas de relevo suave a ondulado</strong>, desenvolvidos sobre sedimentos ou rochas cristalinas alteradas. Sua <strong>extensa distribuição no Semiárido</strong> abrange porções do Ceará, Bahia, Piauí, Pernambuco e Minas Gerais, em ambientes bem drenados.
+      </p>
+    
+      <h4>🚜 Uso Agrícola e Manejo</h4>
+      <p>
+        Os Argissolos possuem <strong>boa aptidão agrícola</strong> quando bem manejados, sobretudo os eutróficos e mais profundos. No entanto, a presença de horizonte Bt argiloso abrupto, em contraste com camadas arenosas acima, pode gerar <strong>restrições à infiltração de água</strong>, além de <strong>risco de erosão</strong> em terrenos declivosos.
+      </p>
+      <p>
+        São utilizados para o cultivo de milho, feijão, mandioca e culturas perenes, além de pastagens cultivadas. O uso de práticas como <strong>plantio em nível, rotação de culturas, cobertura vegetal</strong> e <strong>adubação verde</strong> é fortemente recomendado.
+      </p>
+    
+      <h4>🤝 Conclusão</h4>
+      <p>
+        Os Argissolos representam uma importante classe de solo no Semiárido brasileiro, com <strong>potencial produtivo relevante</strong> quando adequadamente manejados. Requerem atenção às práticas conservacionistas, correção da acidez e reposição de nutrientes para garantir sua sustentabilidade agrícola.
+      </p>
+    
+    </div>
     """
 }

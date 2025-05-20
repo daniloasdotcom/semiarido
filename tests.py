@@ -2,8 +2,8 @@ import geopandas as gpd
 import pandas as pd
 import os
 
-# Lista dos códigos de Luvissolos
-luvissolos = ["TCk", "TCo", "TCp", "TXp"]
+# Lista dos códigos de Argissolos
+argissolos = ["PACd", "PAd", "PAdx", "PAe", "PVa", "PVAd", "PVAe", "PVd", "PVe"]
 
 # Caminho base
 pasta = "dados/solos_sab250"
@@ -13,7 +13,7 @@ tolerancia = 0.01  # ~1km de simplificação
 
 gdfs = []
 
-for nome in luvissolos:
+for nome in argissolos:
     caminho = os.path.join(pasta, f"{nome}.shp")
     if os.path.exists(caminho):
         print(f"Lendo {nome}...")
@@ -24,9 +24,9 @@ for nome in luvissolos:
             gdf["cod_simbol"] = nome  # se não existir, cria
 
         if "legenda" not in gdf.columns:
-            gdf["legenda"] = nome  # ou você pode definir descrições personalizadas
+            gdf["legenda"] = nome  # ou insira descrições mais detalhadas aqui se desejar
 
-        # Simplificação
+        # Simplificação da geometria
         gdf["geometry"] = gdf["geometry"].simplify(tolerance=tolerancia, preserve_topology=True)
 
         gdfs.append(gdf)
@@ -38,8 +38,8 @@ if gdfs:
     gdf_final = gpd.GeoDataFrame(pd.concat(gdfs, ignore_index=True), crs=gdfs[0].crs)
 
     # Salva como GeoJSON
-    saida = "dados/luvissolos_simplificado.geojson"
+    saida = "dados/argissolos_simplificado.geojson"
     gdf_final.to_file(saida, driver="GeoJSON")
     print(f"Arquivo exportado para {saida}")
 else:
-    print("Nenhum arquivo de Luvissolo foi carregado.")
+    print("Nenhum arquivo de Argissolo foi carregado.")

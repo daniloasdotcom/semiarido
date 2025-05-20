@@ -28,7 +28,7 @@ with col_centro:
 
     tipo_solo = st.selectbox(
         "Selecione o tipo de solo para visualizar:",
-        ["Nenhum", "Latossolo", "Cambissolo", "Luvissolo"]
+        ["Nenhum", "Latossolo", "Cambissolo", "Luvissolo", "Argissolo"]
     )
 
     # Caminhos e cores
@@ -36,7 +36,8 @@ with col_centro:
     geojson_solos = {
         "Latossolo": os.path.join("dados", "latossolos_simplificado.geojson"),
         "Cambissolo": os.path.join("dados", "cambissolos_simplificado.geojson"),
-        "Luvissolo": os.path.join("dados", "luvissolos_simplificado.geojson")
+        "Luvissolo": os.path.join("dados", "luvissolos_simplificado.geojson"),
+        "Argissolo": os.path.join("dados", "argissolos_simplificado.geojson")
     }
 
     cores_latossolo = {
@@ -52,6 +53,11 @@ with col_centro:
 
     cores_luvissolo = {
         "TCk": "#00ef32", "TCo": "#dada48", "TCp": "#cc8a73", "TXp": "#e6cd69"
+    }
+
+    cores_argissolo = {
+        "PACd": "#3a00a6", "PAd": "#3f92bf", "PAdx": "#ff00ff", "PAe": "#07d928",
+        "PVa": "#6aff5d", "PVAd": "#d673d8", "PVAe": "#4dff98", "PVd": "#87c3ea", "PVe": "#66c8cf"
     }
 
     if not os.path.exists(caminho_shape_semiarido):
@@ -92,7 +98,8 @@ with col_centro:
                         cores = {
                             "Latossolo": cores_latossolo,
                             "Cambissolo": cores_cambissolo,
-                            "Luvissolo": cores_luvissolo
+                            "Luvissolo": cores_luvissolo,
+                            "Argissolo": cores_argissolo
                         }.get(tipo_solo, {})
 
                         for tipo in gdf_solo["cod_simbol"].unique():
@@ -133,10 +140,13 @@ with col_centro:
                 # Checkboxes + dropdown
                 st.markdown("### Camadas adicionais")
                 c1, c2, c3 = st.columns(3)
+
                 with c1:
                     st.checkbox("Estados do Semiárido", key="opt_estados")
                 with c2:
                     st.checkbox("Caatinga", key="opt_caatinga")
+                with c3:
+                    st.checkbox("MATOPIBA", key="opt_matopiba")
                 #with c3:
                 #    st.selectbox(
                 #        "Geomorfologia",
@@ -167,6 +177,21 @@ with col_centro:
                         folium.GeoJson(
                             gdf_caatinga.__geo_interface__,
                             name="Caatinga",
+                            style_function=lambda feature: {
+                                'fillColor': 'none',
+                                'color': 'black',
+                                'weight': 3
+                            }
+                        ).add_to(m)
+
+                # Camada de MATOPIBA
+                if st.session_state.get("opt_matopiba"):
+                    caminho_matopiba = os.path.join("dados", "sab_matopiba", "sab_matopiba.shp")
+                    if os.path.exists(caminho_matopiba):
+                        gdf_matopiba = gpd.read_file(caminho_matopiba)
+                        folium.GeoJson(
+                            gdf_matopiba.__geo_interface__,
+                            name="MATOPIBA",
                             style_function=lambda feature: {
                                 'fillColor': 'none',
                                 'color': 'black',
@@ -212,7 +237,8 @@ with col_centro:
                 chave = {
                     "Latossolo": "LATOSSOLOS",
                     "Cambissolo": "CAMBISSOLOS",
-                    "Luvissolo": "LUVISSOLOS"
+                    "Luvissolo": "LUVISSOLOS",
+                    "Argissolo": "ARGISSOLOS"
                 }.get(tipo_solo)
 
                 if chave and chave in descricao_solos:
