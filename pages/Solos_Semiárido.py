@@ -10,7 +10,7 @@ from utils.descricao_solos import descricao_solos
 # Layout wide
 st.set_page_config(layout="wide")
 
-# Colunas para centralização
+# Centralização com colunas
 col_esq, col_centro, col_dir = st.columns([1, 6, 1])
 
 with col_centro:
@@ -45,11 +45,20 @@ with col_centro:
             centro_lat = (bounds[1] + bounds[3]) / 2
             centro_lon = (bounds[0] + bounds[2]) / 2
 
-            # Mapa base com tela cheia e controle reposicionado
-            m = folium.Map(location=[centro_lat, centro_lon], zoom_start=6, tiles="CartoDB positron", control_scale=True)
-            Fullscreen(position="topright", title="Tela cheia", title_cancel="Sair da tela cheia").add_to(m)
+            # Criação do mapa base sem camada padrão
+            m = folium.Map(location=[centro_lat, centro_lon], zoom_start=6, tiles=None, control_scale=True)
 
-            # Contorno do semiárido
+            # Adiciona camada base nomeada
+            folium.TileLayer(
+                tiles="CartoDB positron",
+                name="Mapa Base Claro",
+                control=True
+            ).add_to(m)
+
+            # Botão de tela cheia
+            Fullscreen(position="topright").add_to(m)
+
+            # Limites do semiárido
             folium.GeoJson(
                 gdf.__geo_interface__,
                 name="Limites do Semiárido",
@@ -60,6 +69,7 @@ with col_centro:
                 }
             ).add_to(m)
 
+            # Solo selecionado
             if tipo_solo in geojson_solos:
                 caminho = geojson_solos[tipo_solo]
                 gdf_solo = carregar_geojson(caminho)
@@ -73,7 +83,7 @@ with col_centro:
 
                         folium.GeoJson(
                             geojson_tipo,
-                            name=tipo,  # Apenas o código no LayerControl
+                            name=tipo,
                             style_function=lambda feature, cor=cor: {
                                 'fillColor': cor,
                                 'color': cor,
@@ -82,7 +92,7 @@ with col_centro:
                             }
                         ).add_to(m)
 
-                    # Legenda com cor, área e % em HTML
+                    # Legenda
                     df_legenda = calcular_area_por_tipo(gdf_solo)
                     st.markdown(f"### Legenda dos {tipo_solo}s")
 
@@ -102,17 +112,66 @@ with col_centro:
                         )
                 else:
                     st.warning("GeoJSON inválido ou sem colunas 'cod_simbol' e 'legenda'.")
-            else:
-                st.warning(f"Arquivo do solo '{tipo_solo}' não encontrado.")
 
-            # Controles de mapa
-            folium.LayerControl(collapsed=False, position="topleft").add_to(m)
+            # Checkboxes centralizados entre legenda e mapa
+            st.markdown("### Camadas adicionais")
+            c1, c2, c3 = st.columns(3)
+            with c1:
+                st.checkbox("Estados do Semiárido", key="opt_estados")
+            with c2:
+                st.checkbox("Caatinga", key="opt_caatinga")
 
-            # Espaço e exibição do mapa
+            # Camada de Estados do Semiárido (opção 1)
+            # Camada de Estados do Semiárido
+            if st.session_state.get("opt_estados"):
+                caminho_estados = os.path.join("dados", "estados", "Estados_Semiarido.shp")
+                if os.path.exists(caminho_estados):
+                    gdf_estados = gpd.read_file(caminho_estados)
+                    folium.GeoJson(
+                        gdf_estados.__geo_interface__,
+                        name="Estados do Semiárido",
+                        style_function=lambda feature: {
+                            'fillColor': 'none',
+                            'color': 'black',
+                            'weight': 3
+                        }
+                    ).add_to(m)
+
+            # Camada da Caatinga
+            if st.session_state.get("opt_caatinga"):
+                caminho_caatinga = os.path.join("dados", "caatinga", "Caatinga.shp")
+                if os.path.exists(caminho_caatinga):
+                    gdf_caatinga = gpd.read_file(caminho_caatinga)
+                    folium.GeoJson(
+                        gdf_caatinga.__geo_interface__,
+                        name="Caatinga",
+                        style_function=lambda feature: {
+                            'fillColor': 'none',
+                            'color': 'black',
+                            'weight': 3
+                        }
+                    ).add_to(m)
+
+            # Layer control e exibição do mapa
+            folium.LayerControl(collapsed=False, position="topright").add_to(m)
+
             st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
-            st_folium(m, width=1000, height=1000)
+            st_folium(m, height=1000, use_container_width=True)
 
-            # Descrição abaixo do mapa
+            # Estilo para LayerControl
+            st.markdown("""
+            <style>
+            .leaflet-control-layers {
+                max-height: 300px !important;
+                max-width: 200px !important;
+                overflow-y: auto !important;
+                font-size: 13px;
+                padding: 5px;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
+            # Descrição do solo
             st.markdown("<div style='margin-top: 3rem;'></div>", unsafe_allow_html=True)
             chave = "LATOSSOLOS" if tipo_solo == "Latossolo" else "CX" if tipo_solo == "Cambissolo" else None
             if chave and chave in descricao_solos:
