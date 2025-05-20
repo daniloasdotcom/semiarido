@@ -79,7 +79,7 @@ Com apoio de:
 
 ## 📄 Licença
 
-Este projeto é de uso acadêmico e institucional. Entre em contato com o autor para colaborações ou distribuição.
+Este projeto para uso por técnicos, acedêmicos, gestores e curiosos. Entre em contato com o autor para colaborações ou distribuição.
 
 > “A sustentabilidade nasce do conhecimento aplicado ao território.”  
 > — 🌎 Equipe GeoSAB
