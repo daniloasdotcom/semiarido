@@ -2,6 +2,7 @@ import streamlit as st
 
 # Configurações da página
 st.set_page_config(page_title="Danilo Andrade Santos", layout="centered")
+st.sidebar.image("images/logo_geosab.webp", use_column_width=True)
 
 # Adicionando Font Awesome para ícones
 st.markdown(
@@ -92,7 +93,6 @@ with col2:
 st.markdown("""</div>""", unsafe_allow_html=True)
 
 # Seção: Dados Agro
-st.markdown("""<div class='perfil-box'>""", unsafe_allow_html=True)
 col1, col2 = st.columns([1, 2])
 with col1:
     st.image("images/dados_agro.png", use_container_width=True)

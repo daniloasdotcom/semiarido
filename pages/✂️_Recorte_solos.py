@@ -10,6 +10,7 @@ import zipfile
 import tempfile
 
 st.set_page_config(layout="centered")
+st.sidebar.image("images/logo_geosab.webp", use_column_width=True)
 
 st.title("Mapa de Solos por Município - Com shapefile para downlaod")
 
