@@ -2,43 +2,44 @@ import geopandas as gpd
 import pandas as pd
 import os
 
-# --- CONFIGURAÇÕES ---
-# Códigos dos Luvissolos
-luvissoos = ["TCk", "TCo", "TCp", "TXp"]
+# Lista dos códigos de Luvissolos
+luvissolos = ["TCk", "TCo", "TCp", "TXp"]
 
-# Caminhos
-pasta_entrada = "dados/solos_sab250"
-saida_geojson = "dados/luvissolos_simplificado.geojson"
+# Caminho base
+pasta = "dados/solos_sab250"
 
-# Tolerância para simplificação de geometria (aprox. 1 km)
-tolerancia = 0.01
+# Tolerância de simplificação (ajuste conforme necessário)
+tolerancia = 0.01  # ~1km de simplificação
 
-# --- PROCESSAMENTO ---
 gdfs = []
 
-for nome in luvissoos:
-    caminho = os.path.join(pasta_entrada, f"{nome}.shp")
+for nome in luvissolos:
+    caminho = os.path.join(pasta, f"{nome}.shp")
+    if os.path.exists(caminho):
+        print(f"Lendo {nome}...")
+        gdf = gpd.read_file(caminho)
 
-    if not os.path.exists(caminho):
-        print(f"❌ Arquivo não encontrado: {caminho}")
-        continue
+        # Verificação mínima
+        if "cod_simbol" not in gdf.columns:
+            gdf["cod_simbol"] = nome  # se não existir, cria
 
-    print(f"✅ Lendo {nome}...")
-    gdf = gpd.read_file(caminho)
+        if "legenda" not in gdf.columns:
+            gdf["legenda"] = nome  # ou você pode definir descrições personalizadas
 
-    # Garantir colunas essenciais
-    gdf["cod_simbol"] = gdf.get("cod_simbol", pd.Series([nome] * len(gdf)))
-    gdf["legenda"] = gdf.get("legenda", pd.Series([nome] * len(gdf)))
+        # Simplificação
+        gdf["geometry"] = gdf["geometry"].simplify(tolerance=tolerancia, preserve_topology=True)
 
-    # Simplifica a geometria
-    gdf["geometry"] = gdf["geometry"].simplify(tolerance=tolerancia, preserve_topology=True)
+        gdfs.append(gdf)
+    else:
+        print(f"Arquivo não encontrado: {caminho}")
 
-    gdfs.append(gdf)
-
-# --- EXPORTAÇÃO ---
+# Junta todos os tipos
 if gdfs:
     gdf_final = gpd.GeoDataFrame(pd.concat(gdfs, ignore_index=True), crs=gdfs[0].crs)
-    gdf_final.to_file(saida_geojson, driver="GeoJSON")
-    print(f"✅ GeoJSON exportado com sucesso: {saida_geojson}")
+
+    # Salva como GeoJSON
+    saida = "dados/luvissolos_simplificado.geojson"
+    gdf_final.to_file(saida, driver="GeoJSON")
+    print(f"Arquivo exportado para {saida}")
 else:
-    print("⚠️ Nenhum shapefile de Luvissolo foi processado.")
+    print("Nenhum arquivo de Luvissolo foi carregado.")
