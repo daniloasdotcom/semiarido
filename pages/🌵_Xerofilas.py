@@ -8,7 +8,7 @@ from plant_datum.plant_database import (
 from plant_datum.initial_data import dados_iniciais
 
 st.set_page_config(page_title="Xerófitas", page_icon="🌿", layout="centered")
-st.sidebar.image("images/logo_geosab.webp", use_column_width=True)
+st.sidebar.image("images/logo_geosab.webp")
 st.title("🌿 Visualizador de Plantas Xerófitas")
 
 # Inicialização do banco de dados

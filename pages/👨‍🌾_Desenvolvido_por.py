@@ -2,7 +2,7 @@ import streamlit as st
 
 # Configurações da página
 st.set_page_config(page_title="Danilo Andrade Santos", layout="centered")
-st.sidebar.image("images/logo_geosab.webp", use_column_width=True)
+st.sidebar.image("images/logo_geosab.webp")
 
 # Adicionando Font Awesome para ícones
 st.markdown(

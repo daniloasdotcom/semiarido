@@ -1,7 +1,7 @@
 import streamlit as st
 
 st.set_page_config(page_title="GeoSAB", page_icon="🌵", layout="centered")
-st.sidebar.image("images/logo_geosab.webp", use_column_width=True)
+st.sidebar.image("images/logo_geosab.webp")
 
 st.title("🌵 GeoSAB – Por um Semiárido Produtivo e Sustentável")
 

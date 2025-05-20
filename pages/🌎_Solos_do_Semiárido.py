@@ -9,7 +9,7 @@ from utils.descricao_solos import descricao_solos
 
 # Layout wide
 st.set_page_config(layout="wide")
-st.sidebar.image("images/logo_geosab.webp", use_column_width=True)
+st.sidebar.image("images/logo_geosab.webp")
 
 # Centralização com colunas
 col_esq, col_centro, col_dir = st.columns([1, 6, 1])
