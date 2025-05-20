@@ -3,6 +3,14 @@ import streamlit as st
 # Configurações da página
 st.set_page_config(page_title="Danilo Andrade Santos", layout="centered")
 st.sidebar.image("images/logo_geosab.webp")
+st.sidebar.markdown(
+    """
+    <div style='text-align: center; font-size: 1.2rem; margin-top: 0.5rem;'>
+        Desenvolvido por<br><a href="https://daniloas.com" target="_blank" style="text-decoration: none;">daniloas.com</a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # Adicionando Font Awesome para ícones
 st.markdown(
