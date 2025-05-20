@@ -55,50 +55,139 @@ descricao_solos = {
     
     </div>
     """,
-    "TC": """
-    <div style="text-align: justify;">
-    <p>
-    Os <strong>Luvissolos</strong> são amplamente distribuídos no Semiárido brasileiro e se destacam por sua <strong>alta fertilidade natural</strong>, conferida pela presença de uma elevada saturação por bases e por apresentarem <strong>argila de alta atividade</strong>, geralmente do tipo 2:1. Essa característica os torna bastante promissores para a agricultura, desde que manejados adequadamente. São solos <strong>não hidromórficos</strong>, ou seja, não sofrem com encharcamentos prolongados, o que favorece a oxigenação do sistema radicular das plantas.
-    </p>
+    "LUVISSOLOS": """
+    <div style="text-align: justify; font-size: 1rem; line-height: 1.7;">
+
+      <h4>🧬 Características Gerais</h4>
+      <p>
+        Os <strong>Luvissolos</strong> são amplamente distribuídos no Semiárido brasileiro e se destacam por sua <strong>alta fertilidade natural</strong>. Essa fertilidade decorre da <strong>elevada saturação por bases</strong> e da presença de <strong>argila de alta atividade</strong>, predominantemente do tipo 2:1. São solos <strong>não hidromórficos</strong>, ou seja, não sofrem com encharcamentos prolongados, o que favorece a oxigenação das raízes.
+      </p>
     
-    <p>
-    Do ponto de vista morfológico, os Luvissolos apresentam um <strong>horizonte B textural (Bt)</strong>, de <strong>textura argilosa</strong>, <strong>cores vivas</strong> e acúmulo de <strong>argila iluvial</strong>. O <strong>horizonte A</strong> é geralmente fraco, de cor clara, pouco espesso (menor que 10 cm), maciço ou com estrutura pouco desenvolvida, apresentando consistência friável a levemente plástica. É comum a presença de <strong>crosta superficial</strong> (5 a 10 mm) e <strong>altos teores de silte</strong>, além de <strong>pavimento desértico</strong> (revestimento pedregoso), tanto na superfície quanto dentro da massa do solo.
-    </p>
+      <h4>🧱 Morfologia</h4>
+      <p>
+        Apresentam <strong>horizonte B textural (Bt)</strong> com <strong>textura argilosa</strong> e cores vivas, devido ao acúmulo de <strong>argila iluvial</strong>. O horizonte A, geralmente claro e pouco espesso (&lt; 10 cm), é fraco, maciço ou com estrutura pouco desenvolvida. 
+      </p>
+      <ul>
+        <li><strong>Crosta superficial</strong> (5–10 mm)</li>
+        <li><strong>Altos teores de silte</strong></li>
+        <li><strong>Pavimento desértico</strong> (pedregosidade superficial e interna)</li>
+      </ul>
     
-    <p>
-    Quimicamente, variam de <strong>moderadamente ácidos a neutros</strong>, com pH entre 6,0 e 7,0 e <strong>alta saturação por bases</strong> (V &gt; 75%), sem presença de alumínio trocável. Em <strong>Luvissolos vérticos</strong>, a saturação por bases pode atingir 100% em todos os horizontes. A <strong>soma de bases (SB)</strong> e a <strong>capacidade de troca de cátions (CTC)</strong> são altas e geralmente crescentes com a profundidade, alcançando até 27 cmol<sub>c</sub>/kg e 36 cmol<sub>c</sub>/kg, respectivamente. Já o <strong>fósforo assimilável</strong> tende a ser baixo, com exceção de solos com caráter vértico ou planossólico, onde pode atingir até 45 mg/kg no horizonte superficial.
-    </p>
+      <h4>🧪 Propriedades Químicas</h4>
+      <p>
+        Os Luvissolos variam de <strong>moderadamente ácidos a neutros</strong> (pH 6,0 a 7,0), com <strong>saturação por bases &gt; 75%</strong> e ausência de alumínio trocável. Em Luvissolos vérticos, essa saturação pode chegar a 100%.
+      </p>
+      <ul>
+        <li><strong>SB:</strong> até 27 cmol<sub>c</sub>/kg</li>
+        <li><strong>CTC:</strong> até 36 cmol<sub>c</sub>/kg</li>
+        <li><strong>Fósforo assimilável:</strong> geralmente baixo (exceto nos vérticos ou planossólicos)</li>
+      </ul>
     
-    <p>
-    Esses solos ocorrem em diferentes <strong>subgrupos</strong>, como os <strong>Luvissolos Crômicos, Órticos, Líticos e Saprolíticos</strong>. Os <strong>Crômicos</strong> possuem altos teores de minerais primários facilmente intemperizáveis, especialmente potássio (K⁺), e podem apresentar <strong>caráter solódico e/ou salino</strong>, com teores significativos de Na⁺ trocável nos primeiros 100 cm de profundidade. Os subgrupos <strong>Líticos</strong> e <strong>Órticos Líticos</strong> são <strong>pouco profundos</strong>, com <strong>contato lítico</strong> em menos de 50 cm da superfície. Já os <strong>Saprolíticos</strong> apresentam <strong>saprólito</strong> a menos de 100 cm de profundidade, o que limita o uso agrícola e como aterro sanitário.
-    </p>
+      <h4>📚 Subgrupos Principais</h4>
+      <p>
+        Classificam-se como <strong>Luvissolos Crômicos, Órticos, Líticos e Saprolíticos</strong>:
+      </p>
+      <ul>
+        <li><strong>Crômicos:</strong> ricos em minerais primários como potássio; podem ser solódicos e/ou salinos</li>
+        <li><strong>Líticos:</strong> contato lítico a &lt; 50 cm</li>
+        <li><strong>Saprolíticos:</strong> saprólito presente a &lt; 100 cm, limitando uso agrícola</li>
+      </ul>
     
-    <p>
-    Esses solos são <strong>rasos a pouco profundos</strong>, frequentemente encontrados em áreas cristalinas do sertão nordestino, associadas a rochas como <strong>biotita-gnaisse</strong> e <strong>biotita-xisto</strong>, em <strong>relevo suave ondulado</strong>, com <strong>drenagem livre</strong>. São conhecidos popularmente como <em>"vermelhos do sertão"</em>. Sua <strong>textura superficial mais arenosa</strong>, combinada com uma <strong>transição abrupta para o horizonte Bt</strong> mais argiloso, confere <strong>alta suscetibilidade à erosão</strong>, mesmo em relevo suave ondulado, especialmente em áreas mal manejadas, onde sulcos profundos e voçorocas podem se formar.
-    </p>
+      <h4>🌍 Ocorrência e Ambientes</h4>
+      <p>
+        São <strong>rasos a pouco profundos</strong>, comuns em áreas de <strong>rochas cristalinas</strong> (biotita-gnaisse, biotita-xisto), com <strong>relevo suave ondulado</strong> e drenagem livre. São conhecidos como <em>"vermelhos do sertão"</em>.
+      </p>
+      <p>
+        A transição abrupta para o horizonte Bt mais argiloso torna-os <strong>altamente suscetíveis à erosão</strong>, especialmente sob mau manejo.
+      </p>
     
-    <p>
-    A <strong>distribuição geográfica</strong> dos Luvissolos inclui os estados do <strong>Ceará</strong>, <strong>Paraíba</strong>, <strong>Pernambuco</strong> e <strong>Rio Grande do Norte</strong>, ocupando cerca de <strong>98.938 km²</strong>, o que representa <strong>13,3% da região semiárida</strong>. Também ocorrem em áreas como a <strong>Depressão Sertaneja</strong> e o <strong>Planalto da Borborema</strong>, sendo comuns em associação com <strong>Planossolos</strong>, <strong>Neossolos Litólicos</strong> e <strong>afloramentos rochosos</strong>.
-    </p>
+      <h4>🗺️ Distribuição Geográfica</h4>
+      <p>
+        Estão presentes no <strong>Ceará</strong>, <strong>Paraíba</strong>, <strong>Pernambuco</strong> e <strong>Rio Grande do Norte</strong>, ocupando cerca de <strong>98.938 km²</strong> (13,3% da região semiárida). Também ocorrem na <strong>Depressão Sertaneja</strong> e no <strong>Planalto da Borborema</strong>, muitas vezes associados a <strong>Planossolos</strong>, <strong>Neossolos Litólicos</strong> e afloramentos rochosos.
+      </p>
     
-    <p>
-    Apesar da fertilidade, outras <strong>limitações ao uso agrícola</strong> incluem <strong>presença de calhaus e matacões</strong>, <strong>consistência superficial muito dura a extremamente dura</strong>, e a <strong>dificuldade de preparo mecânico</strong> do solo, especialmente com tração animal. Ainda assim, são utilizados com sucesso em <strong>pecuária extensiva</strong>, cultivo de <strong>palma forrageira</strong> e <strong>agricultura de sequeiro</strong> (milho e feijão). Na região do <strong>Vale do São Francisco</strong>, são cultivadas <strong>culturas irrigadas</strong> como cebola, manga e pastagens. A irrigação deve ser priorizada em solos <strong>menos rasos</strong> e de <strong>relevo mais plano</strong>.
-    </p>
+      <h4>🚜 Uso Agrícola e Limitações</h4>
+      <p>
+        Apesar da fertilidade, enfrentam limitações:
+      </p>
+      <ul>
+        <li><strong>Presença de calhaus e matacões</strong></li>
+        <li><strong>Superfície muito dura a extremamente dura</strong></li>
+        <li><strong>Dificuldade de preparo com tração animal</strong></li>
+      </ul>
+      <p>
+        Usados com sucesso para:
+      </p>
+      <ul>
+        <li><strong>Pecuária extensiva</strong></li>
+        <li><strong>Palma forrageira</strong></li>
+        <li><strong>Agricultura de sequeiro</strong> (milho, feijão)</li>
+        <li><strong>Culturas irrigadas</strong> (cebola, manga, pastagens) — preferencialmente em áreas planas e menos rasas</li>
+      </ul>
     
-    <p>
-    Em suma, os Luvissolos são <strong>solos quimicamente ricos</strong>, com elevado potencial nutricional e uso promissor, mas que requerem atenção especial quanto às <strong>limitações físicas</strong>, <strong>fertilidade diferenciada</strong> e <strong>risco erosivo</strong> para o seu manejo sustentável.
-    </p>
+      <h4>🤝 Conclusão</h4>
+      <p>
+        Os Luvissolos são <strong>solos quimicamente ricos</strong>, com elevado potencial agrícola. Contudo, o manejo sustentável requer atenção às <strong>limitações físicas</strong>, <strong>risco de erosão</strong> e <strong>condições locais de uso</strong>.
+      </p>
+    
     </div>
     """,
     "LATOSSOLOS": """
-    <p style="text-align: justify;">
-    Os <strong>Latossolos</strong> compreendem:
-    <ul>
-      <li><strong>Latossolo Amarelo (LA)</strong></li>
-      <li><strong>Latossolo Vermelho (LV)</strong></li>
-      <li><strong>Latossolo Vermelho-Amarelo (LVA)</strong></li>
-    </ul>
-    São solos profundos, bem drenados, com estrutura granular e textura média a argilosa.
-    </p>
+    <div style="text-align: justify; font-size: 1rem; line-height: 1.7;">
+
+      <h4>🧬 Características Gerais</h4>
+      <p>
+        Os <strong>Latossolos</strong> são uma das classes de solos mais representativas do Semiárido brasileiro. São formados sob intenso intemperismo químico, o que lhes confere uma <strong>estrutura granular bem desenvolvida</strong>, elevada estabilidade física e uma distribuição uniforme de argila em todo o perfil. Apresentam cor variando entre <strong>amarela, vermelha e vermelho-amarelada</strong>, a depender da concentração de óxidos de ferro e da drenagem.
+      </p>
+    
+      <h4>🏗️ Morfologia e Perfil</h4>
+      <p>
+        São <strong>solos profundos a muito profundos</strong>, com <strong>textura média a argilosa</strong> e <strong>boa drenagem</strong>. Possuem um <strong>horizonte B latossólico</strong> (Bw), maciço ou com estrutura granular fina, e ausência de acúmulo iluvial de argila. Essa homogeneidade reflete o alto grau de intemperização e pedogênese avançada.
+      </p>
+    
+      <h4>🧪 Propriedades Químicas</h4>
+      <p>
+        Em geral, os Latossolos do Semiárido são <strong>distróficos</strong>, com <strong>baixa fertilidade natural</strong>, <strong>baixo teor de nutrientes disponíveis</strong> e <strong>elevada acidez</strong>. Apresentam baixa capacidade de troca de cátions (CTC), altos valores de Ki (indicando argila pouco ativa), e predominância de minerais secundários e óxidos de ferro e alumínio.
+      </p>
+      <ul>
+        <li><strong>CTC:</strong> geralmente inferior a 8 cmol<sub>c</sub>/kg</li>
+        <li><strong>Ki:</strong> inferior a 1,7 nos mais intemperizados</li>
+        <li><strong>pH:</strong> ácido, frequentemente abaixo de 5,5</li>
+      </ul>
+    
+      <h4>📚 Tipos Principais</h4>
+      <p>
+        Os Latossolos do Semiárido são classificados em três grupos principais:
+      </p>
+      <ul>
+        <li><strong>Latossolo Vermelho (LV)</strong> — maior teor de óxidos de ferro</li>
+        <li><strong>Latossolo Amarelo (LA)</strong> — menor teor de ferro e presença de goethita</li>
+        <li><strong>Latossolo Vermelho-Amarelo (LVA)</strong> — transição entre os dois anteriores</li>
+      </ul>
+    
+      <h4>🗺️ Distribuição Geográfica</h4>
+      <p>
+        Embora menos abundantes no Semiárido do que em outras regiões do Brasil, os Latossolos ocorrem em áreas específicas de <strong>relevo plano a suavemente ondulado</strong>, com destaque para setores do <strong>oeste da Bahia</strong>, <strong>norte de Minas Gerais</strong> e <strong>chapadas sedimentares</strong> localizadas no domínio da Caatinga.
+      </p>
+    
+      <h4>🌱 Uso Agrícola e Manejo</h4>
+      <p>
+        Apesar da baixa fertilidade natural, os Latossolos apresentam <strong>excelente estrutura física</strong>, o que os torna <strong>muito responsivos à correção e adubação</strong>. São amplamente utilizados para o cultivo de:
+      </p>
+      <ul>
+        <li><strong>Milho</strong>, <strong>feijão</strong> e <strong>algodão</strong> em regime de sequeiro</li>
+        <li><strong>Culturas perenes</strong>, como manga e caju, quando irrigados</li>
+        <li><strong>Pastagens cultivadas</strong> e integração lavoura-pecuária</li>
+      </ul>
+      <p>
+        O manejo deve considerar a <strong>baixa retenção de nutrientes</strong>, exigindo o uso regular de <strong>matéria orgânica</strong> e fertilizantes. A erosão é menos crítica, mas pode ocorrer em declividades maiores ou sob preparo inadequado.
+      </p>
+    
+      <h4>🤝 Conclusão</h4>
+      <p>
+        Os Latossolos são <strong>solos fisicamente estáveis, profundos e versáteis</strong>, com grande potencial agrícola quando bem manejados. No Semiárido, representam uma base importante para a agricultura mecanizada e sustentável, especialmente quando integrados a sistemas de irrigação ou práticas de conservação do solo.
+      </p>
+    
+    </div>
     """
 }

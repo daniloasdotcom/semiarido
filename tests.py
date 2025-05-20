@@ -2,44 +2,43 @@ import geopandas as gpd
 import pandas as pd
 import os
 
-# Lista dos códigos de Cambissolos
-cambissolos = ["CXa", "CXbd", "CXbe", "CXk", "CXve", "CYbe"]
+# --- CONFIGURAÇÕES ---
+# Códigos dos Luvissolos
+luvissoos = ["TCk", "TCo", "TCp", "TXp"]
 
-# Caminho base
-pasta = "dados/solos_sab250"
+# Caminhos
+pasta_entrada = "dados/solos_sab250"
+saida_geojson = "dados/luvissolos_simplificado.geojson"
 
-# Tolerância de simplificação (ajuste conforme necessário)
-tolerancia = 0.01  # ~1km de simplificação
+# Tolerância para simplificação de geometria (aprox. 1 km)
+tolerancia = 0.01
 
+# --- PROCESSAMENTO ---
 gdfs = []
 
-for nome in cambissolos:
-    caminho = os.path.join(pasta, f"{nome}.shp")
-    if os.path.exists(caminho):
-        print(f"Lendo {nome}...")
-        gdf = gpd.read_file(caminho)
+for nome in luvissoos:
+    caminho = os.path.join(pasta_entrada, f"{nome}.shp")
 
-        # Verificação mínima
-        if "cod_simbol" not in gdf.columns:
-            gdf["cod_simbol"] = nome  # se não existir, cria
+    if not os.path.exists(caminho):
+        print(f"❌ Arquivo não encontrado: {caminho}")
+        continue
 
-        if "legenda" not in gdf.columns:
-            gdf["legenda"] = nome  # ou você pode definir descrições personalizadas
+    print(f"✅ Lendo {nome}...")
+    gdf = gpd.read_file(caminho)
 
-        # Simplificação
-        gdf["geometry"] = gdf["geometry"].simplify(tolerance=tolerancia, preserve_topology=True)
+    # Garantir colunas essenciais
+    gdf["cod_simbol"] = gdf.get("cod_simbol", pd.Series([nome] * len(gdf)))
+    gdf["legenda"] = gdf.get("legenda", pd.Series([nome] * len(gdf)))
 
-        gdfs.append(gdf)
-    else:
-        print(f"Arquivo não encontrado: {caminho}")
+    # Simplifica a geometria
+    gdf["geometry"] = gdf["geometry"].simplify(tolerance=tolerancia, preserve_topology=True)
 
-# Junta todos os tipos
+    gdfs.append(gdf)
+
+# --- EXPORTAÇÃO ---
 if gdfs:
     gdf_final = gpd.GeoDataFrame(pd.concat(gdfs, ignore_index=True), crs=gdfs[0].crs)
-
-    # Salva como GeoJSON
-    saida = "dados/cambissolos_simplificado.geojson"
-    gdf_final.to_file(saida, driver="GeoJSON")
-    print(f"Arquivo exportado para {saida}")
+    gdf_final.to_file(saida_geojson, driver="GeoJSON")
+    print(f"✅ GeoJSON exportado com sucesso: {saida_geojson}")
 else:
-    print("Nenhum arquivo de Cambissolo foi carregado.")
+    print("⚠️ Nenhum shapefile de Luvissolo foi processado.")
