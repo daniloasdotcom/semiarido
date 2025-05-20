@@ -11,7 +11,7 @@ st.markdown(
         .perfil-box {
             background-color: #f9f9f9;
             border-radius: 10px;
-            padding: 20px;
+            padding: 2px;
             margin-bottom: 30px;
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
@@ -76,6 +76,7 @@ st.markdown("""</div>""", unsafe_allow_html=True)
 
 # Seção: Código Agro
 st.markdown("""<div class='perfil-box'>""", unsafe_allow_html=True)
+st.subheader("🤝 Apoio:")
 col1, col2 = st.columns([1, 2])
 with col1:
     st.image("images/codigo_agro.png", use_container_width=True)

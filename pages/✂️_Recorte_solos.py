@@ -9,8 +9,19 @@ from io import BytesIO
 import zipfile
 import tempfile
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="centered")
+
 st.title("Mapa de Solos por Município - Com shapefile para downlaod")
+
+# Descrição orientativa
+st.markdown("""
+<div style='font-size: 16px; line-height: 1.6;'>
+<ul>
+  <li>🗺️ <strong>Selecione um município</strong> para visualizar o recorte de solos disponíveis.</li>
+  <li>📥 <strong>Para baixar o shapefile do recorte</strong>, role até o final da página e clique em <em>Baixar Recorte (.zip)</em>.</li>
+</ul>
+</div>
+""", unsafe_allow_html=True)
 
 # --- 1. Carregar municípios ---
 gdf_municipios = gpd.read_file("dados/municipios/Municipios_caatinga.shp")

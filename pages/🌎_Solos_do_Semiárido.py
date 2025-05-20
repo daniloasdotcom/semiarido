@@ -33,7 +33,7 @@ with col_centro:
             observer.observe(body, { childList: true, subtree: true });
         </script>
     """, unsafe_allow_html=True)
-    st.title("Visualização Interativa do Semiárido Brasileiro")
+    st.title("Visualização Interativa dos Solos do Semiárido Brasileiro")
 
     tipo_solo = st.selectbox("Selecione o tipo de solo para visualizar:", ["Nenhum", "Latossolo", "Cambissolo"])
 
@@ -136,6 +136,7 @@ with col_centro:
                     st.warning("GeoJSON inválido ou sem colunas 'cod_simbol' e 'legenda'.")
 
             # Checkboxes centralizados entre legenda e mapa
+            st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
             st.markdown("### Camadas adicionais")
             c1, c2, c3 = st.columns(3)
             with c1:

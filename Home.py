@@ -35,10 +35,12 @@ st.divider()
 st.markdown(
     """
     <p style='text-align:center; font-size:14px;'>
-        Projeto <strong>GeoSAB</strong> – uma iniciativa de 
+        Projeto <strong>GeoSAB</strong> – Desenvolvido e mantido por <a href='https://daniloas.com' target='_blank'>daniloas.com</a>
+        <br>
+        Com o apoio da 
         <a href='https://codigoagro.com' target='_blank'>codigoagro.com</a> e 
-        <a href='https://dadosagro.com' target='_blank'>dadosagro.com</a><br>
-        Desenvolvido por <a href='https://daniloas.com' target='_blank'>daniloas.com</a>
+        <a href='https://dadosagro.com' target='_blank'>dadosagro.com</a>
+        
     </p>
     """,
     unsafe_allow_html=True
