@@ -33,7 +33,7 @@ st.subheader("🔬 Formação e Pesquisa")
 st.markdown(
     """
     - Agrônomo  
-    - Professor de Bioquímica (UFES - 2022-2024)
+    - [Professor de Bioquímica (UFES - 2022-2024)](https://bioquimicacomdanilo.com.br/)
     - Pesquisador em Produção Vegetal (M.Sc., D.Sc. - UFES)  
     - Especialista em Biocarvões (desde 2012)  
     - [Especialista em Agroecologia (IFES)](https://agroecossistemas.online/home)  
