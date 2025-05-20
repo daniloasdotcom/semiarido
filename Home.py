@@ -23,7 +23,8 @@ Na presente versão você encontrará dados sobre:
     - Da Caatinga
     - Dos Estados
     - E a descrições das principais classes de solo
-- ✂️Vizualização e download de recortes dos solos por município 
+- ✂️ Vizualização e download de recortes dos solos por município
+- 🐦 Converse com o SAB-IÁ - e aprenda mais sobre o semiárido brasileiro 
 """)
 
 st.divider()

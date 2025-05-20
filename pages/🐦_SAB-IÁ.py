@@ -14,7 +14,7 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 
-st.title("🐦 SABIÁ - A IA do GeoSAB que fala sobre o semiárido brasileiro")
+st.title("🐦 SAB-IÁ - A IA do GeoSAB que fala sobre o semiárido brasileiro")
 st.markdown("Faça perguntas sobre sistemas agrícolas sustentáveis no semiárido e receba sugestões com base em conhecimento técnico e ecológico.")
 
 # Acesso à chave e ID do assistente
