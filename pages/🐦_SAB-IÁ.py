@@ -1,6 +1,7 @@
 import streamlit as st
 import openai
 import time
+import re  # <--- IMPORTANTE: adicionamos para limpeza dos marcadores
 
 # Configuração da página
 st.set_page_config(page_title="SAB-IÁ • IA do GeoSAB", layout="centered", page_icon="🌵")
@@ -97,7 +98,6 @@ pergunta = st.chat_input("Digite sua pergunta sobre cultivo no semiárido...")
 
 # Processamento da pergunta
 if pergunta:
-    # Adiciona e exibe a pergunta do usuário
     st.session_state["mensagens"].append({"role": "user", "content": pergunta})
     st.markdown(
         f"<div class='chat-bubble user-bubble'>{pergunta}</div>",
@@ -132,6 +132,9 @@ if pergunta:
                 resposta = openai.beta.threads.messages.list(
                     thread_id=st.session_state["thread_id"]
                 ).data[0].content[0].text.value
+
+                # 🔧 Remove os marcadores tipo 【n:m†source】
+                resposta = re.sub(r"【\d+:\d+†source】", "", resposta)
 
             except Exception as e:
                 resposta = "Desculpe, ocorreu um erro ao processar sua pergunta."
