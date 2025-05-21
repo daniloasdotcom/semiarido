@@ -2,13 +2,12 @@ import streamlit as st
 import openai
 import time
 
-# Config da página
+# Configuração da página
 st.set_page_config(page_title="SAB-IÁ • IA do GeoSAB", layout="centered", page_icon="🌵")
 
-# CSS global
+# CSS customizado
 st.markdown("""
 <style>
-    /* Tamanho e cor da fonte nos balões */
     .chat-bubble {
         color: #111 !important;
         font-size: 1.1rem !important;
@@ -18,20 +17,16 @@ st.markdown("""
         margin: 8px 0;
         max-width: 85%;
     }
-
     .user-bubble {
         background-color: #f1f8e9;
         text-align: right;
         margin-left: auto;
     }
-
     .assistant-bubble {
         background-color: #e0f7fa;
         text-align: left;
         margin-right: auto;
     }
-
-    /* Campo de entrada */
     input[type="text"] {
         border: 2px solid #4CAF50 !important;
         border-radius: 10px;
@@ -39,8 +34,6 @@ st.markdown("""
         font-size: 1.1rem !important;
         color: #111 !important;
     }
-
-    /* Texto geral da interface */
     html, body, [class*="css"] {
         font-size: 1.05rem !important;
         color: #111 !important;
@@ -48,7 +41,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# JS para rolar para o final da página
+# JS para rolar automaticamente
 st.markdown("""
 <script>
     window.scrollTo(0, document.body.scrollHeight);
@@ -72,7 +65,7 @@ Faça perguntas sobre agricultura sustentável, ecologia e convivência com o se
 </p>
 """, unsafe_allow_html=True)
 
-# API
+# API config
 openai.api_key = st.secrets["api_key"]
 assistant_id = st.secrets["assistant_id"]
 
@@ -83,7 +76,7 @@ if "mensagens" not in st.session_state:
 if "thread_id" not in st.session_state:
     st.session_state["thread_id"] = openai.beta.threads.create().id
 
-# Novo chat
+# Botão novo chat
 if st.button("🆕 Novo chat", help="Limpa a conversa e inicia um novo diálogo"):
     st.session_state["mensagens"] = []
     st.session_state["thread_id"] = openai.beta.threads.create().id
@@ -91,7 +84,7 @@ if st.button("🆕 Novo chat", help="Limpa a conversa e inicia um novo diálogo"
 
 st.divider()
 
-# Histórico
+# Exibe mensagens anteriores
 for msg in st.session_state["mensagens"]:
     bubble_class = "assistant-bubble" if msg["role"] == "assistant" else "user-bubble"
     st.markdown(
@@ -102,9 +95,9 @@ for msg in st.session_state["mensagens"]:
 # Entrada
 pergunta = st.chat_input("Digite sua pergunta sobre cultivo no semiárido...")
 
-# Processamento
+# Processamento da pergunta
 if pergunta:
-    # Adiciona a pergunta do usuário imediatamente
+    # Adiciona e exibe a pergunta do usuário
     st.session_state["mensagens"].append({"role": "user", "content": pergunta})
     st.markdown(
         f"<div class='chat-bubble user-bubble'>{pergunta}</div>",
@@ -143,8 +136,16 @@ if pergunta:
             except Exception as e:
                 resposta = "Desculpe, ocorreu um erro ao processar sua pergunta."
 
-            st.markdown(
-                f"<div class='chat-bubble assistant-bubble'>{resposta}</div>",
+        # Animação de digitação
+        resposta_animada = ""
+        placeholder = st.empty()
+        for i in range(len(resposta)):
+            resposta_animada += resposta[i]
+            placeholder.markdown(
+                f"<div class='chat-bubble assistant-bubble'>{resposta_animada}</div>",
                 unsafe_allow_html=True
             )
-            st.session_state["mensagens"].append({"role": "assistant", "content": resposta})
+            time.sleep(0.007)
+
+        # Salva no histórico
+        st.session_state["mensagens"].append({"role": "assistant", "content": resposta})
