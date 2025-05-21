@@ -118,7 +118,7 @@ if pergunta:
                     assistant_id=assistant_id
                 )
 
-                for _ in range(30):
+                for _ in range(90):
                     status = openai.beta.threads.runs.retrieve(
                         thread_id=st.session_state["thread_id"],
                         run_id=run.id
