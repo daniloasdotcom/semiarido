@@ -19,7 +19,7 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
-st.title("Mapa de Solos por Município - Com shapefile para downlaod")
+st.title("Mapa de Solos por Município - Com shapefile para download")
 
 # Descrição orientativa
 st.markdown("""
@@ -32,7 +32,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- 1. Carregar municípios ---
-gdf_municipios = gpd.read_file("dados/municipios/Municipios_caatinga.shp")
+gdf_municipios = gpd.read_file("dados/municipios/municipios_semiarido_2022.shp")
 if gdf_municipios.crs is None:
     gdf_municipios.set_crs("EPSG:4674", inplace=True)
 
@@ -130,32 +130,32 @@ else:
             'fillColor': 'none', 'color': 'blue', 'weight': 2
         }).add_to(m)
 
-        if not clipado.empty:
-            if not clipado.empty:
-                for solo_tipo in clipado["COD_SIMBOL"].unique():
-                    camada = clipado[clipado["COD_SIMBOL"] == solo_tipo]
-                    cor = mapa_cores.get(solo_tipo, "#aaaaaa")
-
-                    folium.GeoJson(
-                        camada,
-                        name=solo_tipo,  # Apenas o símbolo
-                        style_function=lambda feature, cor=cor: {
-                            'fillColor': cor,
-                            'color': 'black',
-                            'weight': 1,
-                            'fillOpacity': 0.6
-                        },
-                        tooltip=folium.GeoJsonTooltip(
-                            fields=["COD_SIMBOL", "area_ha"],
-                            aliases=["Código do Solo:", "Área (ha):"]
-                        )
-                    ).add_to(m)
-        else:
+        if clipado.empty:
             st.info("Nenhuma feição de solo encontrada.")
+        else:
+            for solo_tipo in clipado["COD_SIMBOL"].unique():
+                camada = clipado[clipado["COD_SIMBOL"] == solo_tipo]
+                cor = mapa_cores.get(solo_tipo, "#aaaaaa")
+
+                folium.GeoJson(
+                    camada,
+                    name=solo_tipo,
+                    style_function=lambda feature, cor=cor: {
+                        'fillColor': cor,
+                        'color': 'black',
+                        'weight': 1,
+                        'fillOpacity': 0.6
+                    },
+                    tooltip=folium.GeoJsonTooltip(
+                        fields=["COD_SIMBOL", "area_ha"],
+                        aliases=["Código do Solo:", "Área (ha):"]
+                    )
+                ).add_to(m)
 
         folium.LayerControl().add_to(m)
         st_folium(m, width=1000, height=600)
 
+        # Legenda sempre que clipado tiver dados
         if not clipado.empty:
             st.subheader("Legenda de Cores por Tipo de Solo")
 
@@ -204,5 +204,4 @@ else:
                 mime="application/zip"
             )
 
-    # 👇 Executa o processamento completo
     mostrar_resultados(muni)
