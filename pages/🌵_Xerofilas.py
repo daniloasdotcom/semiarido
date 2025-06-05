@@ -1,4 +1,5 @@
 import streamlit as st
+from bs4 import BeautifulSoup
 from plant_datum.plant_database import (
     criar_tabela,
     criar_tabela_receitas,
@@ -50,7 +51,8 @@ if plantas:
         text_color = "#ffffff" if theme == "dark" else "#000000"
         border_color = "#444" if theme == "dark" else "#ccc"
 
-        # Exibir informações da planta com os novos campos
+        # Exibir informações da planta
+        # A seção de SAFs foi removida daqui para ser tratada como um expander separado.
         st.markdown(f"""
             <div style="background-color: {bg_color}; color: {text_color};
                         padding: 1rem; border-radius: 10px; border: 1px solid {border_color};">
@@ -60,10 +62,70 @@ if plantas:
                 <p><strong>🍽️ Uso:</strong><br>{planta[4]}</p>
                 <p><strong>💧 Características adaptativas:</strong><br>{planta[5]}</p>
                 <p><strong>📝 Observações:</strong><br>{planta[6]}</p>
-                <p><strong>🌾 Plantio e manejo:</strong><br>{planta[7] or ""}</p>
-                <p><strong>🌳 Aplicações em SAFs:</strong><br>{planta[8] or ""}</p>
             </div>
         """, unsafe_allow_html=True)
+
+        # --- Expanders dinâmicos para Aplicações em SAFs ---
+        safs_html = planta[8] or ""  # Coluna 8 é para Aplicações em SAFs
+        if safs_html:  # Só tenta processar se houver conteúdo
+            safs_soup = BeautifulSoup(safs_html, "html.parser")
+
+            safs_secoes = []
+            atual_titulo_safs = None
+            conteudo_safs = []
+
+            for elem in safs_soup.children:
+                if elem.name == "h3":
+                    if atual_titulo_safs and conteudo_safs:
+                        safs_secoes.append((atual_titulo_safs, "".join(str(e) for e in conteudo_safs)))
+                        conteudo_safs = []
+                    atual_titulo_safs = elem.get_text()
+                elif atual_titulo_safs:
+                    conteudo_safs.append(elem)
+
+            if atual_titulo_safs and conteudo_safs:
+                safs_secoes.append((atual_titulo_safs, "".join(str(e) for e in conteudo_safs)))
+
+            if safs_secoes:
+                st.markdown("### 🌳 Aplicações em SAFs")
+                for titulo, conteudo_html in safs_secoes:
+                    with st.expander(titulo):
+                        st.markdown(conteudo_html, unsafe_allow_html=True)
+            else:
+                # Se não houver H3 na seção SAFs, mas houver conteúdo, exiba como texto simples
+                # Isso cobre o caso em que a SAFs pode ser um bloco de texto sem cabeçalhos H3
+                st.markdown("### 🌳 Aplicações em SAFs")
+                st.markdown(safs_html, unsafe_allow_html=True)
+        else:
+            st.info("Nenhuma informação sobre Aplicações em SAFs cadastrada para esta planta.")
+
+        # --- Expanders dinâmicos para Plantio e Manejo ---
+        plantio_html = planta[7] or ""
+        soup = BeautifulSoup(plantio_html, "html.parser")
+
+        # Extrair seções com base nas tags <h3>
+        plantio_secoes = []
+        atual_titulo = None
+        conteudo = []
+
+        for elem in soup.children:
+            if elem.name == "h3":
+                if atual_titulo and conteudo:
+                    plantio_secoes.append((atual_titulo, "".join(str(e) for e in conteudo)))
+                    conteudo = []
+                atual_titulo = elem.get_text()
+            elif atual_titulo:
+                conteudo.append(elem)
+
+        if atual_titulo and conteudo:
+            plantio_secoes.append((atual_titulo, "".join(str(e) for e in conteudo)))
+
+        # Mostrar as seções como expanders
+        if plantio_secoes:
+            st.markdown("### 🌾 Plantio e Manejo")
+            for titulo, conteudo_html in plantio_secoes:
+                with st.expander(titulo):
+                    st.markdown(conteudo_html, unsafe_allow_html=True)
 
         # Exibir receitas vinculadas
         receitas = listar_receitas(planta[0])
