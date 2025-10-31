@@ -1,5 +1,9 @@
 # 📘 Atualizações de versão
 
+## [2025-06-05]
+- Atualização das informações da _Spondias tuberosa_ e Passiflora _cicinnata_na página de xerófitas
+- Introdução das informações da _Harconia speciosa_
+
 ## [2025-05-22]
 - Atualização da base geográfica de municípios do SAB e dos limites do semiárido com base na base de municípios do IBGE
 - Ajustes da visualização de solos do semiárido para um carregamento mais leve das classes de solo

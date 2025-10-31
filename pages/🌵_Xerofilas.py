@@ -51,19 +51,50 @@ if plantas:
         text_color = "#ffffff" if theme == "dark" else "#000000"
         border_color = "#444" if theme == "dark" else "#ccc"
 
-        # Exibir informações da planta
-        # A seção de SAFs foi removida daqui para ser tratada como um expander separado.
+        # Exibir informações da planta (Uso foi removido daqui)
         st.markdown(f"""
             <div style="background-color: {bg_color}; color: {text_color};
                         padding: 1rem; border-radius: 10px; border: 1px solid {border_color};">
                 <p><strong>🌿 Nome popular:</strong> {planta[2]}</p>
                 <p><strong>🔬 Nome científico:</strong> <em>{planta[1]}</em></p>
                 <p><strong>🌍 Origem:</strong> {planta[3]}</p>
-                <p><strong>🍽️ Uso:</strong><br>{planta[4]}</p>
                 <p><strong>💧 Características adaptativas:</strong><br>{planta[5]}</p>
                 <p><strong>📝 Observações:</strong><br>{planta[6]}</p>
             </div>
         """, unsafe_allow_html=True)
+
+        # --- Expanders dinâmicos para Uso ---
+        uso_html = planta[4] or ""  # Coluna 4 é para Uso
+        if uso_html:  # Só tenta processar se houver conteúdo
+            uso_soup = BeautifulSoup(uso_html, "html.parser")
+
+            uso_secoes = []
+            atual_titulo_uso = None
+            conteudo_uso = []
+
+            for elem in uso_soup.children:
+                if elem.name == "h3":
+                    if atual_titulo_uso and conteudo_uso:
+                        uso_secoes.append((atual_titulo_uso, "".join(str(e) for e in conteudo_uso)))
+                        conteudo_uso = []
+                    atual_titulo_uso = elem.get_text()
+                elif atual_titulo_uso:
+                    conteudo_uso.append(elem)
+
+            if atual_titulo_uso and conteudo_uso:
+                uso_secoes.append((atual_titulo_uso, "".join(str(e) for e in conteudo_uso)))
+
+            if uso_secoes:
+                st.markdown("### 🍽️ Uso")  # Título principal para a seção de Uso
+                for titulo, conteudo_html in uso_secoes:
+                    with st.expander(titulo):
+                        st.markdown(conteudo_html, unsafe_allow_html=True)
+            else:
+                # Se não houver H3 na seção Uso, mas houver conteúdo, exiba como texto simples
+                st.markdown("### 🍽️ Uso")
+                st.markdown(uso_html, unsafe_allow_html=True)
+        else:
+            st.info("Nenhuma informação sobre Uso cadastrada para esta planta.")
 
         # --- Expanders dinâmicos para Aplicações em SAFs ---
         safs_html = planta[8] or ""  # Coluna 8 é para Aplicações em SAFs
@@ -93,7 +124,6 @@ if plantas:
                         st.markdown(conteudo_html, unsafe_allow_html=True)
             else:
                 # Se não houver H3 na seção SAFs, mas houver conteúdo, exiba como texto simples
-                # Isso cobre o caso em que a SAFs pode ser um bloco de texto sem cabeçalhos H3
                 st.markdown("### 🌳 Aplicações em SAFs")
                 st.markdown(safs_html, unsafe_allow_html=True)
         else:
