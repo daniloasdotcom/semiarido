@@ -45,7 +45,7 @@ st.markdown(
     - Pesquisador em Produção Vegetal (M.Sc., D.Sc. - UFES)  
     - [Especialista em Biocarvões (desde 2012)](https://biochardatablog.streamlit.app/)
     - [Especialista em Agroecologia (IFES)](https://agroecossistemas.online/home)  
-    - Especializando em Bioinsumos (IFGO)
+    - [Especializando em Bioinsumos (IFGO)](https://portalbioinsumos.online/home)
     - Especializando em Agropecuária Sustentável (IFRO)    
     """,
     unsafe_allow_html=True
