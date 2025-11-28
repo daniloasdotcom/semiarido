@@ -60,7 +60,7 @@ st.sidebar.markdown("""
 # Título
 st.markdown("""
 <h1 style='text-align: center; font-size: 2.5rem;'>🌵🐦🌵 SAB-IÁ</h1>
-<h3 style='text-align: center; font-weight: 400;'>A inteligência artificial do GeoSAB que fala sobre o semiárido brasileiro</h3>
+<h3 style='text-align: center; font-weight: 400;'>A inteligência artificial do GeoSAB</h3>
 <p style='text-align: center; font-size: 1.1rem; color: #aaa;'>
 Faça perguntas sobre agricultura sustentável, ecologia e convivência com o semiárido.
 </p>
